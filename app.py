@@ -51,10 +51,8 @@ df_one_hot = pd.DataFrame(cols_encoded, columns=new_cols_names)
 
 df_processed = pd.concat([df_one_hot, df_pca, df["loan_status"]], axis=1)
 
-# algoritmo de clasificación KNN
 knn_classifier = KNeighborsClassifier(n_neighbors=5)
 
-# metaestimador de clasificación
 bagging_knn = BaggingClassifier(estimator=knn_classifier, # clasificador base
                                 n_estimators=100, # cantidad de estimadores
                                 max_samples=0.3,  # número de muestras requeridas para cada estimador
@@ -101,6 +99,7 @@ graph_pca.update_layout(title="Crédito regularizado vs. en default")
 graph_pca.update_layout(legend=dict(font=dict(size=9)))
 
 app = dash.Dash(__name__)
+server = app.server
 
 app.layout =  html.Div(id="body",className="e4_body",children=[
     html.H1("Evaluación en riesgo de crédito",id="title",className="e4_title"),
