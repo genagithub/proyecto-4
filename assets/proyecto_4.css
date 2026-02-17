@@ -39,6 +39,10 @@
 }
 .input_div{
     width: 100%;
+    display: flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center
 }
 .input_button:hover{
     cursor:pointer;
