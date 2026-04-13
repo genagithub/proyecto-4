@@ -13,118 +13,83 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.ensemble import BaggingClassifier
 
 
-df_original = pd.read_csv("data/credit_risk.csv")
-df_original.dropna(subset=["person_emp_length","loan_int_rate"], inplace=True)
+df_original = pd.read_csv("data/smart_supply_chain.csv", encoding="latin-1")
 
-df_original = df_original.loc[(df_original["person_age"] < 100) | (df_original["person_emp_length"] < 100),:]
+final_states = ["CLOSED", "COMPLETE", "CANCELED", "SUSPECTED_FRAUD"]
+df_original = df_original[df_original["Order Status"].isin(final_states)]
+df_original["Order Success"] = df_original["Order Status"].isin(["COMPLETE", "CLOSED"]).astype(int)
+
+df_original["Discount Ratio"] = df_original["Order Item Discount"] / df_original["Product Price"]
 
 df = df_original.copy()
-df.reset_index(drop=True, inplace=True)
+df.drop(columns=["Order Status","Order Item Discount"], inplace=True)
+df = df.reset_index(drop=True)
 
-X = df.drop(["loan_status","loan_intent","loan_grade","person_home_ownership","cb_person_default_on_file"], axis=1)
-y = df["loan_status"] 
+categorical_vars = ["Category Name", "Market", "Order Region", "Shipping Mode"]
+numeric_vars = ["Days for shipment (scheduled)", "Product Price", "Discount Ratio", "Order Item Profit Ratio"]
 
 scaler = StandardScaler()
-scaler.fit(X)
-X_scaled = scaler.transform(X)
+df[numeric_vars] = scaler.fit_transform(df[numeric_vars])
 
-pca = PCA()
-X_pca = pca.fit_transform(X_scaled)
+encoder = OneHotEncoder(drop="first", sparse_output=False)
+encoded_data = encoder.fit_transform(df[categorical_vars])
+df_encoded = pd.DataFrame(encoded_data, columns=encoder.get_feature_names_out(categorical_vars))
 
-pca = PCA(n_components=2)
+df = pd.concat([df.drop(columns=categorical_vars), df_encoded], axis=1)
 
-# reduciendo los datos estandarizados a 2 dimensiones
-pca.fit(X_scaled)
-X_pca = pca.transform(X_scaled)
-
-columns_pca = ["PC1_numeric","PC2_numeric"]
-df_pca = pd.DataFrame(X_pca, columns=columns_pca)
-
-categorical_cols = ["loan_intent","loan_grade","person_home_ownership","cb_person_default_on_file"]
-
-one_hot_encoder = OneHotEncoder(handle_unknown='ignore', sparse_output=False)
-one_hot_encoder.fit(df[categorical_cols])
-cols_encoded = one_hot_encoder.transform(df[categorical_cols])
-
-new_cols_names = one_hot_encoder.get_feature_names_out(categorical_cols)
-df_one_hot = pd.DataFrame(cols_encoded, columns=new_cols_names)
-
-df_processed = pd.concat([df_one_hot, df_pca, df["loan_status"]], axis=1)
+column = df.pop("Order Success")
+df.insert(0, "Order Success", column)
 
 knn_classifier = KNeighborsClassifier(n_neighbors=5)
 
-bagging_knn = BaggingClassifier(estimator=knn_classifier, # clasificador base
-                                n_estimators=100, # cantidad de estimadores
-                                max_samples=0.3,  # número de muestras requeridas para cada estimador
-                                bootstrap=True) # muestreo con reemplazo
+bagging_knn = BaggingClassifier(estimator=knn_classifier,
+                                n_estimators=100,
+                                max_samples=0.3,
+                                bootstrap=True)
 
-bagging_knn.fit(df_processed[df_processed.columns[:-1]], df["loan_status"])
+bagging_knn.fit(df[df.columns[1:]], df["Order Success"])
 
-object = df.sample(n=1)
+pca = PCA(n_components=2)
+pca_results = pca.fit_transform(df[numeric_vars])
 
-object_categorical_cols = object[categorical_cols]
-categorical_cols_encoded = one_hot_encoder.transform(object_categorical_cols)
-categorical_cols_encoded = pd.DataFrame(categorical_cols_encoded, columns=new_cols_names)
+df_pca = pd.DataFrame(pca_results, columns=["PC1", "PC2"])
+df_pca["Order Success"] = df["Order Success"].values
 
-categorical_cols.append("loan_status")
-object_numeric_cols = object.drop(categorical_cols, axis=1)
-numeric_cols_scaled = scaler.transform(object_numeric_cols)
-numeric_cols_pca = pca.transform(numeric_cols_scaled)
-numeric_cols_pca = pd.DataFrame(numeric_cols_pca, columns=columns_pca)
-
-object_processed = pd.concat([categorical_cols_encoded, numeric_cols_pca], axis=1)
-
-predict_encoded = bagging_knn.predict(object_processed)[0]
-
-predict_proba = bagging_knn.predict_proba(object_processed)
-probability = predict_proba[0, predict_encoded]*100
-
-if predict_encoded == 0:
-    probability = 100 - probability 
-
-probability = str(probability)
-
-df_processed = df_processed.loc[(df_processed["PC1_numeric"] < 15),:]
-
-default = df_processed.loc[df_processed["loan_status"] == 1,:]
-non_default = df_processed.loc[df_processed["loan_status"] == 0,:]
+success = df_pca.loc[df_pca["Order Success"] == 1,:]
+fails = df_pca.loc[df_pca["Order Success"] == 0,:]
 
 probability_text = html.B(id="probability",children=[],style={})
 colors = ("green","red")
 
-graph_pca = go.Figure()
-graph_pca.add_trace(go.Scatter(x=default["PC1_numeric"], y=default["PC2_numeric"], mode="markers", marker_color="red", name="en default"))
-graph_pca.add_trace(go.Scatter(x=non_default["PC1_numeric"], y=non_default["PC2_numeric"], mode="markers", marker_color="green", name="regularizado"))
-graph_pca.update_layout(title="Crédito regularizado vs. en default")
-graph_pca.update_layout(legend=dict(font=dict(size=9)))
+fig_pca = go.Figure()
+fig_pca.add_trace(go.Scatter(x=success["PC1"], y=success["PC2"], mode="markers", marker_color="red", name="en default"))
+fig_pca.add_trace(go.Scatter(x=fails["PC1"], y=fails["PC2"], mode="markers", marker_color="green", name="regularizado"))
+fig_pca.update_layout(title="Órdenes exitosas vs. fracasos")
+fig_pca.update_layout(legend=dict(font=dict(size=9)))
 
 app = dash.Dash(__name__)
 server = app.server
 
 app.layout =  html.Div(id="body",className="e4_body",children=[
-    html.A(href="https://github.com/genagithub/proyecto-4/blob/main/evaluaci%C3%B3n_sobre_riesgos_crediticios.ipynb",children=[html.H1("Evaluación en riesgo de crédito",id="title",className="e4_title")]),
+    html.H1("Evaluación en riesgo de venta de nuevos productos",id="title",className="e4_title"),
     html.Div(id="dashboard",className="e4_dashboard",children=[
         html.Div(className="e4_graph_div",children=[
-            dcc.Graph(id="graph_pca",className="e4_graph",figure=graph_pca),
+            dcc.Graph(id="graph_pca",className="e4_graph",figure=fig_pca),
             html.Form(id="input_div",className="input_div",children=[
-                dcc.Input(id="input_1",className="input",type="text",placeholder="Edad",size="7"),
-                dcc.Input(id="input_2",className="input",type="text",placeholder="Ingreso anual",size="7"),
-                dcc.Input(id="input_3",className="input",type="text",placeholder="Tenencia de vivienda",size="7"),
-                dcc.Input(id="input_4",className="input",type="text",placeholder="Longitud empleado",size="7"),
-                dcc.Input(id="input_5",className="input",type="text",placeholder="Intención del préstamo",size="7"),
-                dcc.Input(id="input_6",className="input",type="text",placeholder="Grado del préstamo",size="7"),
-                dcc.Input(id="input_7",className="input",type="text",placeholder="Monto total",size="7"),
-                dcc.Input(id="input_8",className="input",type="text",placeholder="Interés del préstamo",size="7"),
-                dcc.Input(id="input_9",className="input",type="text",placeholder="Porcentage sobre el ingreso",size="7"),
-                dcc.Input(id="input_10",className="input",type="text",placeholder="Historial de incumplimientos",size="7"),
-                dcc.Input(id="input_11",className="input",type="text",placeholder="Historial de crédito(años)",size="7"),
-                html.Button("enviar",id="button",type="button",className="input_button",n_clicks=0)
+                dcc.Input(id="input_1",className="input",type="text",placeholder="Días de envío (esquema)",size="7"),
+                dcc.Input(id="input_2",className="input",type="text",placeholder="Mercado objetivo",size="7"),
+                dcc.Input(id="input_3",className="input",type="text",placeholder="Región específica",size="7"),
+                dcc.Input(id="input_4",className="input",type="text",placeholder="Categoría asignada",size="7"),
+                dcc.Input(id="input_5",className="input",type="text",placeholder="Precio del producto",size="7"),
+                dcc.Input(id="input_6",className="input",type="text",placeholder="Ratio del descuento",size="7"),
+                dcc.Input(id="input_7",className="input",type="text",placeholder="Tipo de envío",size="7"),
+                html.Button(id="button",className="button",children="Enviar",n_clicks=0)
             ]),
-            html.P(["predicción: riesgo de impago de ",probability_text,"%"],className="e4_predict")
+            html.P(["predicción: riesgo de fracaso de ",probability_text,"%"],className="e4_predict")
         ])
     ])
 ])
-        
+
 @app.callback(
     [Output(component_id="graph_pca",component_property="figure"),
     Output(component_id="probability",component_property="children"),
@@ -136,58 +101,42 @@ app.layout =  html.Div(id="body",className="e4_body",children=[
     State(component_id="input_4",component_property="value"),
     State(component_id="input_5",component_property="value"),
     State(component_id="input_6",component_property="value"),
-    State(component_id="input_7",component_property="value"),
-    State(component_id="input_8",component_property="value"),
-    State(component_id="input_9",component_property="value"),
-    State(component_id="input_10",component_property="value"),
-    State(component_id="input_11",component_property="value")]
+    State(component_id="input_7",component_property="value")]
 )
 
-def update_graph(n_clicks, var_1, var_2, var_3, var_4, var_5, var_6, var_7, var_8, var_9, var_10, var_11):
+def get_risk_prob(n_clicks, var_1, var_2, var_3, var_4, var_5, var_6, var_7):
+
     if n_clicks is not None and n_clicks > 0:
-        
-        object = pd.DataFrame({
-            "person_age":[var_1],
-            "person_income":[var_2],
-            "person_home_ownership":[var_3],
-            "person_emp_length":[var_4],
-            "loan_intent":[var_5],
-            "loan_grade":[var_6],
-            "loan_amnt":[var_7],
-            "loan_int_rate":[var_8],
-            "loan_percent_income":[var_9],
-            "cb_person_default_on_file":[var_10],
-            "cb_person_cred_hist_length":[var_11]
+
+        new_object = pd.DataFrame({
+            "Days for shipment (scheduled)": [float(var_1)],
+            "Market": [var_2],
+            "Order Region": [var_3],
+            "Category Name": [var_4],
+            "Product Price": [float(var_5)],
+            "Discount Ratio": [float(var_6)],
+            "Shipping Mode": [var_7]
         })
-           
-        categorical_cols = ["loan_intent","loan_grade","person_home_ownership","cb_person_default_on_file"]   
-        object_categorical_cols = object[categorical_cols]
-        categorical_cols_encoded = one_hot_encoder.transform(object_categorical_cols)
-        categorical_cols_encoded = pd.DataFrame(categorical_cols_encoded, columns=new_cols_names)
 
-        object_numeric_cols = object.drop(categorical_cols, axis=1)
-        numeric_cols_scaled = scaler.transform(object_numeric_cols)
-        numeric_cols_pca = pca.transform(numeric_cols_scaled)
-        numeric_cols_pca = pd.DataFrame(numeric_cols_pca, columns=columns_pca)
+        obj_num_scaled = scaler.transform(new_object[numeric_vars])
+        obj_pca = pca.transform(obj_num_scaled)
+        df_obj_pca = pd.DataFrame(obj_pca, columns=["PC1", "PC2"])
 
-        object_processed = pd.concat([categorical_cols_encoded, numeric_cols_pca], axis=1)
+        obj_cat_encoded = encoder.transform(new_object[categorical_vars])
+        df_obj_cat = pd.DataFrame(obj_cat_encoded, columns=encoder.get_feature_names_out(categorical_vars))
 
-        predict_encoded = bagging_knn.predict(object_processed)[0]
-        predict_proba = bagging_knn.predict_proba(object_processed)
-        probability = predict_proba[0, predict_encoded]*100
-        
-        if predict_encoded == 0:
-            probability = 100 - probability
-            if probability >= 45:
-                predict_encoded = 1
-        
-        probability = str(probability)
-        probability = probability[:4]
-        probability_color = {"color":colors[predict_encoded]}
-        
-        graph_pca.add_trace(go.Scatter(x=object_processed["PC1_numeric"], y=object_processed["PC2_numeric"], mode="markers", marker_color="blueviolet", name="nuevo préstamo"))
-    
-    return graph_pca, probability, probability_color
+        df_obj_num_scaled = pd.DataFrame(obj_num_scaled, columns=numeric_vars)
+        object_to_predict = pd.concat([df_obj_num_scaled, df_obj_cat], axis=1)[X_train_columns]
+
+        prob_fail = bagging_knn.predict_proba(object_to_predict)[0, 0] * 100
+
+        color_res = "red" if prob_fail > 45 else "green"
+
+        fig_pca.add_trace(go.Scatter(x=df_obj_pca["PC1"], y=df_obj_pca["PC2"],
+                      mode="markers", marker=dict(color='blueviolet', size=15, symbol='star'),
+                      name="Nuevo Producto"))
+
+    return fig_pca, f"{prob_fail:.2f}", {"color": color_res}
 
 
 if __name__ == "__main__":
