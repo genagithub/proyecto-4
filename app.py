@@ -51,11 +51,6 @@ bagging_knn = BaggingClassifier(estimator=knn_classifier,
 
 bagging_knn.fit(df[X_train_columns], df["Order Success"])
 
-import gc
-del df_original
-del df_encoded
-gc.collect()
-
 pca = PCA(n_components=2)
 pca_results = pca.fit_transform(df[numeric_vars])
 
@@ -91,7 +86,7 @@ app.layout =  html.Div(id="body",className="e4_body",children=[
                 dcc.Input(id="input_7",className="input",type="text",placeholder="Tipo de envío",size="7"),
                 html.Button(id="button",className="button",children="Enviar",n_clicks=0)
             ]),
-            html.P(["predicción: riesgo de fracaso de ",probability_text,"%"],className="e4_predict")
+            html.P(["predicción: riesgo de fracaso del ",probability_text,"%"],className="e4_predict")
         ])
     ])
 ])
