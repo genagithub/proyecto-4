@@ -59,8 +59,7 @@ df_pca["Order Success"] = df["Order Success"].values
 success = df_pca.loc[df_pca["Order Success"] == 1,:]
 fails = df_pca.loc[df_pca["Order Success"] == 0,:]
 
-probability_text = html.B(id="probability",children=[],style={})
-colors = ("green","red")
+probability_text = html.B(id="probability", children=[], style={})
 
 fig_pca = go.Figure()
 fig_pca.add_trace(go.Scatter(x=success["PC1"], y=success["PC2"], mode="markers", marker_color="red", name="Completadas"))
