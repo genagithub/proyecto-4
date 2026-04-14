@@ -117,37 +117,47 @@ def get_risk_prob(n_clicks, var_1, var_2, var_3, var_4, var_5, var_6, var_7):
 
     fig_update = go.Figure(fig_pca)
     
+    prob_fail = 0.0
+    color_res = "black"
+    
     if n_clicks is not None and n_clicks > 0:
+        try:
+            new_object = pd.DataFrame({
+                "Days for shipment (scheduled)": [float(var_1)],
+                "Market": [var_2],
+                "Order Region": [var_3],
+                "Category Name": [var_4],
+                "Product Price": [float(var_5)],
+                "Discount Ratio": [float(var_6)],
+                "Shipping Mode": [var_7]
+            })
 
-        new_object = pd.DataFrame({
-            "Days for shipment (scheduled)": [float(var_1)],
-            "Market": [var_2],
-            "Order Region": [var_3],
-            "Category Name": [var_4],
-            "Product Price": [float(var_5)],
-            "Discount Ratio": [float(var_6)],
-            "Shipping Mode": [var_7]
-        })
+            obj_num_scaled = scaler.transform(new_object[numeric_vars])
+            obj_pca = pca.transform(obj_num_scaled)
+            df_obj_pca = pd.DataFrame(obj_pca, columns=["PC1", "PC2"])
 
-        obj_num_scaled = scaler.transform(new_object[numeric_vars])
-        obj_pca = pca.transform(obj_num_scaled)
-        df_obj_pca = pd.DataFrame(obj_pca, columns=["PC1", "PC2"])
+            obj_cat_encoded = encoder.transform(new_object[categorical_vars])
+            df_obj_cat = pd.DataFrame(obj_cat_encoded, columns=encoder.get_feature_names_out(categorical_vars))
 
-        obj_cat_encoded = encoder.transform(new_object[categorical_vars])
-        df_obj_cat = pd.DataFrame(obj_cat_encoded, columns=encoder.get_feature_names_out(categorical_vars))
+            df_obj_num_scaled = pd.DataFrame(obj_num_scaled, columns=numeric_vars)
+            object_to_predict = pd.concat([df_obj_num_scaled, df_obj_cat], axis=1)[X_train_columns]
 
-        df_obj_num_scaled = pd.DataFrame(obj_num_scaled, columns=numeric_vars)
-        object_to_predict = pd.concat([df_obj_num_scaled, df_obj_cat], axis=1)[X_train_columns]
+            prob_fail = bagging_knn.predict_proba(object_to_predict)[0, 0] * 100
+            color_res = "red" if prob_fail > 45 else "green"
 
-        prob_fail = bagging_knn.predict_proba(object_to_predict)[0, 0] * 100
-
-        color_res = "red" if prob_fail > 45 else "green"
-
-        fig_update.add_trace(go.Scatter(x=df_obj_pca["PC1"], y=df_obj_pca["PC2"], mode="markers", marker=dict(color="blueviolet", size=15, symbol='star'), name="Nuevo Producto"))
+            fig_update.add_trace(go.Scatter(
+                x=df_obj_pca["PC1"], 
+                y=df_obj_pca["PC2"], 
+                mode="markers", 
+                marker=dict(color="blueviolet", size=15, symbol='star'), 
+                name="Nuevo Producto"
+            ))
+        except:
+            return fig_update, "Error en datos", {"color": "gray"}
 
     return fig_update, f"{prob_fail:.2f}", {"color": color_res}
 
 
 if __name__ == "__main__":
     port = int(os.environ.get("PORT", 8050))
-    app.run_server(host='0.0.0.0', port=port)
+    app.run(host='0.0.0.0', port=port)
