@@ -31,7 +31,6 @@ scaler = StandardScaler()
 df[numeric_vars] = scaler.fit_transform(df[numeric_vars])
 
 encoder = OrdinalEncoder()
-encoded_data = encoder.fit_transform(df[categorical_vars])
 df[categorical_vars] = encoder.fit_transform(df[categorical_vars])
 
 column = df.pop("Order Success")
