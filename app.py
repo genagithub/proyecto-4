@@ -12,7 +12,7 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.ensemble import BaggingClassifier
 
 
-df_original = pd.read_csv("data/smart_supply_chain.csv", encoding="latin-1")
+df_original = pd.read_csv("data/smart_supply_chain%20.csv", encoding="latin-1")
 
 final_states = ["CLOSED", "COMPLETE", "CANCELED", "SUSPECTED_FRAUD"]
 df_original = df_original[df_original["Order Status"].isin(final_states)]
@@ -112,7 +112,7 @@ def get_risk_prob(n_clicks, var_1, var_2, var_3, var_4, var_5, var_6, var_7):
     
     if n_clicks is not None and n_clicks > 0:
         new_object = pd.DataFrame({
-            "Days for shipment (scheduled)": [float(var_1)],
+            "Days for shipment (scheduled)": [int(var_1)],
             "Market": [var_2],
             "Order Region": [var_3],
             "Category Name": [var_4],
