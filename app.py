@@ -6,7 +6,7 @@ import plotly.graph_objects as go
 import dash
 from dash import html, dcc
 from dash.dependencies import Output, Input, State
-from sklearn.preprocessing import OneHotEncoder, StandardScaler
+from sklearn.preprocessing import OrdinalEncoder, StandardScaler
 from sklearn.decomposition import PCA
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.ensemble import BaggingClassifier
@@ -30,11 +30,9 @@ numeric_vars = ["Days for shipment (scheduled)", "Product Price", "Discount Rati
 scaler = StandardScaler()
 df[numeric_vars] = scaler.fit_transform(df[numeric_vars])
 
-encoder = OneHotEncoder(drop="first", sparse_output=False)
+encoder = OrdinalEncoder()
 encoded_data = encoder.fit_transform(df[categorical_vars])
-df_encoded = pd.DataFrame(encoded_data, columns=encoder.get_feature_names_out(categorical_vars))
-
-df = pd.concat([df.drop(columns=categorical_vars), df_encoded], axis=1)
+df[categorical_vars] = encoder.fit_transform(df[categorical_vars])
 
 column = df.pop("Order Success")
 df.insert(0, "Order Success", column)
@@ -122,15 +120,15 @@ def get_risk_prob(n_clicks, var_1, var_2, var_3, var_4, var_5, var_6, var_7):
         })
 
         obj_num_scaled = scaler.transform(new_object[numeric_vars])
+        df_obj_num_scaled = pd.DataFrame(obj_num_scaled, columns=numeric_vars)
+
         obj_pca = pca.transform(obj_num_scaled)
         df_obj_pca = pd.DataFrame(obj_pca, columns=["PC1", "PC2"])
+      
+        df_obj_cat = pd.DataFrame(encoder.transform(new_object[categorical_vars]), columns=categorical_vars)
 
-        obj_cat_encoded = encoder.transform(new_object[categorical_vars])
-        df_obj_cat = pd.DataFrame(obj_cat_encoded, columns=encoder.get_feature_names_out(categorical_vars))
-
-        df_obj_num_scaled = pd.DataFrame(obj_num_scaled, columns=numeric_vars)
         object_to_predict = pd.concat([df_obj_num_scaled, df_obj_cat], axis=1)[X_train_columns]
-
+      
         prob_fail = bagging_knn.predict_proba(object_to_predict)[0, 0] * 100
         color_res = "red" if prob_fail > 45 else "green"
 
