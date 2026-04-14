@@ -45,8 +45,9 @@ knn_classifier = KNeighborsClassifier(n_neighbors=5)
 
 bagging_knn = BaggingClassifier(estimator=knn_classifier,
                                 n_estimators=30,
-                                max_samples=0.3,
-                                bootstrap=True)
+                                max_samples=0.25,
+                                bootstrap=True,
+                                n_jobs=1)
 
 bagging_knn.fit(df[df.columns[1:]], df["Order Success"])
 
