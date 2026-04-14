@@ -40,6 +40,8 @@ df = pd.concat([df.drop(columns=categorical_vars), df_encoded], axis=1)
 column = df.pop("Order Success")
 df.insert(0, "Order Success", column)
 
+X_train_columns = df.columns[1:] 
+
 knn_classifier = KNeighborsClassifier(n_neighbors=5)
 
 bagging_knn = BaggingClassifier(estimator=knn_classifier,
@@ -106,6 +108,8 @@ app.layout =  html.Div(id="body",className="e4_body",children=[
 
 def get_risk_prob(n_clicks, var_1, var_2, var_3, var_4, var_5, var_6, var_7):
 
+    fig_update = go.Figure(fig_pca)
+    
     if n_clicks is not None and n_clicks > 0:
 
         new_object = pd.DataFrame({
@@ -132,11 +136,9 @@ def get_risk_prob(n_clicks, var_1, var_2, var_3, var_4, var_5, var_6, var_7):
 
         color_res = "red" if prob_fail > 45 else "green"
 
-        fig_pca.add_trace(go.Scatter(x=df_obj_pca["PC1"], y=df_obj_pca["PC2"],
-                      mode="markers", marker=dict(color='blueviolet', size=15, symbol='star'),
-                      name="Nuevo Producto"))
+        fig_update.add_trace(go.Scatter(x=df_obj_pca["PC1"], y=df_obj_pca["PC2"], mode="markers", marker=dict(color="blueviolet", size=15, symbol='star'), name="Nuevo Producto"))
 
-    return fig_pca, f"{prob_fail:.2f}", {"color": color_res}
+    return fig_update, f"{prob_fail:.2f}", {"color": color_res}
 
 
 if __name__ == "__main__":
