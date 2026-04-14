@@ -51,6 +51,11 @@ bagging_knn = BaggingClassifier(estimator=knn_classifier,
 
 bagging_knn.fit(df[df.columns[1:]], df["Order Success"])
 
+import gc
+del df_original
+del df_encoded
+gc.collect()
+
 pca = PCA(n_components=2)
 pca_results = pca.fit_transform(df[numeric_vars])
 
