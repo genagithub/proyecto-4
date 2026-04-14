@@ -1,8 +1,7 @@
 import pandas as pd
+import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
-import numpy as np
-import pandas as pd
 import plotly.graph_objects as go
 import dash
 from dash import html, dcc
@@ -91,6 +90,7 @@ app.layout =  html.Div(id="body",className="e4_body",children=[
         ])
     ])
 ])
+
 
 @app.callback(
     [Output(component_id="graph_pca",component_property="figure"),
