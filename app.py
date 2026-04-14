@@ -25,7 +25,7 @@ df.drop(columns=["Order Status","Order Item Discount"], inplace=True)
 df = df.reset_index(drop=True)
 
 categorical_vars = ["Category Name", "Market", "Order Region", "Shipping Mode"]
-numeric_vars = ["Days for shipment (scheduled)", "Product Price", "Discount Ratio", "Order Item Profit Ratio"]
+numeric_vars = ["Days for shipment (scheduled)", "Product Price", "Discount Ratio"]
 
 scaler = StandardScaler()
 df[numeric_vars] = scaler.fit_transform(df[numeric_vars])
