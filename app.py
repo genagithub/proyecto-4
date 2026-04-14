@@ -44,7 +44,7 @@ X_train_columns = df.columns[1:]
 knn_classifier = KNeighborsClassifier(n_neighbors=5)
 
 bagging_knn = BaggingClassifier(estimator=knn_classifier,
-                                n_estimators=30,
+                                n_estimators=10,
                                 max_samples=0.25,
                                 bootstrap=True,
                                 n_jobs=1)
