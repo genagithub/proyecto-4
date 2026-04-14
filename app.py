@@ -63,8 +63,8 @@ probability_text = html.B(id="probability",children=[],style={})
 colors = ("green","red")
 
 fig_pca = go.Figure()
-fig_pca.add_trace(go.Scatter(x=success["PC1"], y=success["PC2"], mode="markers", marker_color="red", name="en default"))
-fig_pca.add_trace(go.Scatter(x=fails["PC1"], y=fails["PC2"], mode="markers", marker_color="green", name="regularizado"))
+fig_pca.add_trace(go.Scatter(x=success["PC1"], y=success["PC2"], mode="markers", marker_color="red", name="Completadas"))
+fig_pca.add_trace(go.Scatter(x=fails["PC1"], y=fails["PC2"], mode="markers", marker_color="green", name="Fracasos"))
 fig_pca.update_layout(title="Órdenes exitosas vs. fracasos")
 fig_pca.update_layout(legend=dict(font=dict(size=9)))
 
