@@ -49,7 +49,7 @@ bagging_knn = BaggingClassifier(estimator=knn_classifier,
                                 bootstrap=True,
                                 n_jobs=1)
 
-bagging_knn.fit(df[df.columns[1:]], df["Order Success"])
+bagging_knn.fit(df[X_train_columns], df["Order Success"])
 
 import gc
 del df_original
