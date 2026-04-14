@@ -1,4 +1,3 @@
-import os
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
@@ -14,13 +13,7 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.ensemble import BaggingClassifier
 
 
-current_dir = os.path.dirname(os.path.abspath(__file__))
-csv_path = os.path.join(current_dir, "data", "smart_supply_chain.csv")
-
-try:
-    df_original = pd.read_csv(csv_path, encoding="latin-1")
-except FileNotFoundError:
-    df_original = pd.read_csv("data/smart_supply_chain.csv", encoding="latin-1")
+df_original = pd.read_csv("data/smart_supply_chain.csv", encoding="latin-1")
 
 final_states = ["CLOSED", "COMPLETE", "CANCELED", "SUSPECTED_FRAUD"]
 df_original = df_original[df_original["Order Status"].isin(final_states)]
@@ -149,9 +142,8 @@ def get_risk_prob(n_clicks, var_1, var_2, var_3, var_4, var_5, var_6, var_7):
                 x=df_obj_pca["PC1"], 
                 y=df_obj_pca["PC2"], 
                 mode="markers", 
-                marker=dict(color="blueviolet", size=15, symbol='star'), 
-                name="Nuevo Producto"
-            ))
+                marker=dict(color="blueviolet", size=15, symbol="star"), 
+                name="Nuevo Producto"))
         except:
             return fig_update, "Error en datos", {"color": "gray"}
 
