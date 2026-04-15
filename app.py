@@ -69,7 +69,7 @@ app = dash.Dash(__name__)
 server = app.server
 
 app.layout =  html.Div(id="body",className="e4_body",children=[
-    html.H1("Evaluación en riesgo de ventas planificadas",id="title",className="e4_title"),
+    html.H1("Evaluación de riesgo en ventas planificadas",id="title",className="e4_title"),
     html.Div(id="dashboard",className="e4_dashboard",children=[
         html.Div(className="e4_graph_div",children=[
             dcc.Graph(id="graph_pca",className="e4_graph",figure=fig_pca),
