@@ -61,15 +61,15 @@ probability_text = html.B(id="probability", children=[], style={})
 
 fig_pca = go.Figure()
 fig_pca.add_trace(go.Scatter(x=success["PC1"], y=success["PC2"], mode="markers", marker_color="red", name="Completadas"))
-fig_pca.add_trace(go.Scatter(x=fails["PC1"], y=fails["PC2"], mode="markers", marker_color="green", name="Fracasos"))
-fig_pca.update_layout(title="Órdenes exitosas vs. fracasos")
+fig_pca.add_trace(go.Scatter(x=fails["PC1"], y=fails["PC2"], mode="markers", marker_color="green", name="Sin éxito"))
+fig_pca.update_layout(title="Resultados de órdenes históricas")
 fig_pca.update_layout(legend=dict(font=dict(size=9)))
 
 app = dash.Dash(__name__)
 server = app.server
 
 app.layout =  html.Div(id="body",className="e4_body",children=[
-    html.H1("Evaluación en riesgo de venta de nuevos productos",id="title",className="e4_title"),
+    html.H1("Evaluación en riesgo de ventas planificadas",id="title",className="e4_title"),
     html.Div(id="dashboard",className="e4_dashboard",children=[
         html.Div(className="e4_graph_div",children=[
             dcc.Graph(id="graph_pca",className="e4_graph",figure=fig_pca),
@@ -131,7 +131,7 @@ def get_risk_prob(n_clicks, var_1, var_2, var_3, var_4, var_5, var_6, var_7):
         prob_fail = bagging_knn.predict_proba(object_to_predict)[0, 0] * 100
         color_res = "red" if prob_fail > 45 else "green"
 
-        fig_update.add_trace(go.Scatter(x=df_obj_pca["PC1"], y=df_obj_pca["PC2"], mode="markers", marker=dict(color="blueviolet", size=15, symbol="star"), name="Nuevo Producto"))
+        fig_update.add_trace(go.Scatter(x=df_obj_pca["PC1"], y=df_obj_pca["PC2"], mode="markers", marker=dict(color="blueviolet", size=15, symbol="star"), name="Nuevo producto"))
 
     return fig_update, f"{prob_fail:.2f}", {"color": color_res}
 
