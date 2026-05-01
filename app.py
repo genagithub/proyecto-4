@@ -57,11 +57,14 @@ df_pca["Order Success"] = df["Order Success"].values
 success = df_pca.loc[df_pca["Order Success"] == 1,:]
 fails = df_pca.loc[df_pca["Order Success"] == 0,:]
 
+df_value_counts = df["Order Success"].value_counts(normalize=True)
+success_prc, fails_prc = df_value_counts.loc[1], df_value_counts.loc[0]
+
 probability_text = html.B(id="probability", children=[], style={})
 
 fig_pca = go.Figure()
-fig_pca.add_trace(go.Scatter(x=success["PC1"], y=success["PC2"], mode="markers", marker_color="red", name="Completadas"))
-fig_pca.add_trace(go.Scatter(x=fails["PC1"], y=fails["PC2"], mode="markers", marker_color="green", name="Sin éxito"))
+fig_pca.add_trace(go.Scatter(x=success["PC1"], y=success["PC2"], mode="markers", marker_color="red", name=f"Completadas ({success_prc:.2f%})"))
+fig_pca.add_trace(go.Scatter(x=fails["PC1"], y=fails["PC2"], mode="markers", marker_color="green", name=f"Sin éxito ({fails_prc:.2f%})"))
 fig_pca.update_layout(title="Resultados de órdenes históricas")
 fig_pca.update_layout(legend=dict(font=dict(size=9)))
 
@@ -74,13 +77,13 @@ app.layout =  html.Div(id="body",className="e4_body",children=[
         html.Div(className="e4_graph_div",children=[
             dcc.Graph(id="graph_pca",className="e4_graph",figure=fig_pca),
             html.Form(id="input_div",className="input_div",children=[
-                dcc.Input(id="input_1",className="e4_input",type="text",placeholder="Días de envío (esquema)",size="7"),
-                dcc.Input(id="input_2",className="e4_input",type="text",placeholder="Mercado objetivo",size="7"),
-                dcc.Input(id="input_3",className="e4_input",type="text",placeholder="Región específica",size="7"),
-                dcc.Input(id="input_4",className="e4_input",type="text",placeholder="Categoría asignada",size="7"),
-                dcc.Input(id="input_5",className="e4_input",type="text",placeholder="Precio del producto",size="7"),
-                dcc.Input(id="input_6",className="e4_input",type="text",placeholder="Ratio del descuento",size="7"),
-                dcc.Input(id="input_7",className="e4_input",type="text",placeholder="Tipo de envío",size="7"),
+                dcc.Input(id="input_1",className="input",type="text",placeholder="Días de envío (esquema)",size="7"),
+                dcc.Input(id="input_2",className="input",type="text",placeholder="Mercado objetivo",size="7"),
+                dcc.Input(id="input_3",className="input",type="text",placeholder="Región específica",size="7"),
+                dcc.Input(id="input_4",className="input",type="text",placeholder="Categoría asignada",size="7"),
+                dcc.Input(id="input_5",className="input",type="text",placeholder="Precio del producto",size="7"),
+                dcc.Input(id="input_6",className="input",type="text",placeholder="Ratio del descuento",size="7"),
+                dcc.Input(id="input_7",className="input",type="text",placeholder="Tipo de envío",size="7"),
                 html.Button(id="button",className="button",children="Enviar",n_clicks=0)
             ]),
             html.P(["predicción: riesgo de fracaso del ",probability_text,"%"],className="e4_predict")
