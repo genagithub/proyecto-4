@@ -57,8 +57,8 @@ df_pca["Order Success"] = df["Order Success"].values
 success = df_pca.loc[df_pca["Order Success"] == 1,:]
 fails = df_pca.loc[df_pca["Order Success"] == 0,:]
 
-df_value_counts = df["Order Success"].value_counts(normalize=True)
-success_prc, fails_prc = df_value_counts.loc[1], df_value_counts.loc[0]
+df_value_counts = df_original["Order Success"].value_counts(normalize=True)
+success_prc, fails_prc = df_value_counts.loc[1]*100, df_value_counts.loc[0]*100
 
 probability_text = html.B(id="probability", children=[], style={})
 
