@@ -77,12 +77,12 @@ app.layout =  html.Div(id="body",className="e4_body",children=[
         html.Div(className="e4_graph_div",children=[
             dcc.Graph(id="graph_pca",className="e4_graph",figure=fig_pca),
             html.Form(id="input_div",className="input_div",children=[
-                dcc.Input(id="input_1",className="input",type="text",placeholder="Días de envío (esquema)",size="6"),
-                dcc.Input(id="input_2",className="input",type="text",placeholder="Mercado objetivo",size="6"),
-                dcc.Input(id="input_3",className="input",type="text",placeholder="Región específica",size="6"),
-                dcc.Input(id="input_4",className="input",type="text",placeholder="Categoría asignada",size="6"),
-                dcc.Input(id="input_5",className="input",type="text",placeholder="Precio del producto",size="6"),
-                dcc.Input(id="input_6",className="input",type="text",placeholder="Ratio del descuento",size="6"),
+                dcc.Input(id="input_1",className="input",type="text",placeholder="Días de envío (esquema)",size="7"),
+                dcc.Input(id="input_2",className="input",type="text",placeholder="Mercado objetivo",size="7"),
+                dcc.Input(id="input_3",className="input",type="text",placeholder="Región específica",size="7"),
+                dcc.Input(id="input_4",className="input",type="text",placeholder="Categoría asignada",size="7"),
+                dcc.Input(id="input_5",className="input",type="text",placeholder="Precio del producto",size="7"),
+                dcc.Input(id="input_6",className="input",type="text",placeholder="Ratio del descuento",size="7"),
                 dcc.Input(id="input_7",className="input",type="text",placeholder="Tipo de envío",size="7"),
                 html.Button(id="button",className="button",children="Enviar",n_clicks=0)
             ]),
