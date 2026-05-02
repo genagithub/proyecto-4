@@ -58,13 +58,13 @@ success = df_pca.loc[df_pca["Order Success"] == 1,:]
 fails = df_pca.loc[df_pca["Order Success"] == 0,:]
 
 df_value_counts = df_original["Order Success"].value_counts(normalize=True)
-success_prc, fails_prc = df_value_counts.loc[1]*100, df_value_counts.loc[0]*100
+success_prc, fails_prc = round(df_value_counts.loc[1]*100), round(df_value_counts.loc[0]*100)
 
 probability_text = html.B(id="probability", children=[], style={})
 
 fig_pca = go.Figure()
-fig_pca.add_trace(go.Scatter(x=success["PC1"], y=success["PC2"], mode="markers", marker_color="red", name=f"Completadas ({success_prc:.2f%})"))
-fig_pca.add_trace(go.Scatter(x=fails["PC1"], y=fails["PC2"], mode="markers", marker_color="green", name=f"Sin éxito ({fails_prc:.2f%})"))
+fig_pca.add_trace(go.Scatter(x=success["PC1"], y=success["PC2"], mode="markers", marker_color="red", name=f"Completadas ({success_prc})"))
+fig_pca.add_trace(go.Scatter(x=fails["PC1"], y=fails["PC2"], mode="markers", marker_color="green", name=f"Sin éxito ({fails_prc})"))
 fig_pca.update_layout(title="Resultados de órdenes históricas")
 fig_pca.update_layout(legend=dict(font=dict(size=9)))
 
