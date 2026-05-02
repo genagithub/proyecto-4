@@ -52,7 +52,7 @@ a {
     align-items:center
 }
 .input{
-    width: 15px;
+    width: 45px;
 }
 .input_button:hover{
     cursor:pointer;
