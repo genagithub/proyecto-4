@@ -63,8 +63,8 @@ success_prc, fails_prc = round(df_value_counts.loc[1]*100), round(df_value_count
 probability_text = html.B(id="probability", children=[], style={})
 
 fig_pca = go.Figure()
-fig_pca.add_trace(go.Scatter(x=success["PC1"], y=success["PC2"], mode="markers", marker_color="red", name=f"Completadas ({success_prc})"))
-fig_pca.add_trace(go.Scatter(x=fails["PC1"], y=fails["PC2"], mode="markers", marker_color="green", name=f"Sin éxito ({fails_prc})"))
+fig_pca.add_trace(go.Scatter(x=success["PC1"], y=success["PC2"], mode="markers", marker_color="green", name=f"Completadas ({success_prc}%)"))
+fig_pca.add_trace(go.Scatter(x=fails["PC1"], y=fails["PC2"], mode="markers", marker_color="red", name=f"Sin éxito ({fails_prc}%)"))
 fig_pca.update_layout(title="Resultados de órdenes históricas")
 fig_pca.update_layout(legend=dict(font=dict(size=9)))
 
@@ -77,12 +77,12 @@ app.layout =  html.Div(id="body",className="e4_body",children=[
         html.Div(className="e4_graph_div",children=[
             dcc.Graph(id="graph_pca",className="e4_graph",figure=fig_pca),
             html.Form(id="input_div",className="input_div",children=[
-                dcc.Input(id="input_1",className="input",type="text",placeholder="Días de envío (esquema)",size="8"),
-                dcc.Input(id="input_2",className="input",type="text",placeholder="Mercado objetivo",size="8"),
-                dcc.Input(id="input_3",className="input",type="text",placeholder="Región específica",size="8"),
-                dcc.Input(id="input_4",className="input",type="text",placeholder="Categoría asignada",size="8"),
-                dcc.Input(id="input_5",className="input",type="text",placeholder="Precio del producto",size="8"),
-                dcc.Input(id="input_6",className="input",type="text",placeholder="Ratio del descuento",size="8"),
+                dcc.Input(id="input_1",className="input",type="text",placeholder="Días de envío (esquema)",size="6"),
+                dcc.Input(id="input_2",className="input",type="text",placeholder="Mercado objetivo",size="6"),
+                dcc.Input(id="input_3",className="input",type="text",placeholder="Región específica",size="6"),
+                dcc.Input(id="input_4",className="input",type="text",placeholder="Categoría asignada",size="6"),
+                dcc.Input(id="input_5",className="input",type="text",placeholder="Precio del producto",size="6"),
+                dcc.Input(id="input_6",className="input",type="text",placeholder="Ratio del descuento",size="6"),
                 dcc.Input(id="input_7",className="input",type="text",placeholder="Tipo de envío",size="7"),
                 html.Button(id="button",className="button",children="Enviar",n_clicks=0)
             ]),
