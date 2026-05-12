@@ -87,7 +87,7 @@ app.layout =  html.Div(id="body",className="e4_body",children=[
                 dcc.Dropdown(id="input_3", options=options_cat["Order Region"], placeholder="Región", style={"width":"180px"}),
                 dcc.Dropdown(id="input_4", options=options_cat["Category Name"], placeholder="Categoría", style={"width":"180px"}),
                 dcc.Dropdown(id="input_7", options=options_cat["Shipping Mode"], placeholder="Tipo Envío", style={"width":"180px"}),
-                html.Button(id="button", children="Enviar", n_clicks=0, className="e4_button")
+                html.Button(id="button", className="e4_button", children="Enviar", n_clicks=0)
             ]),
             html.P(["predicción: riesgo de fracaso del ",probability_text,"%"],className="e4_predict")
         ])
