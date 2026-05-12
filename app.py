@@ -34,8 +34,6 @@ encoder = OrdinalEncoder(handle_unknown='use_encoded_value', unknown_value=-1)
 encoder.fit(df[categorical_vars])
 df[categorical_vars] = encoder.transform(df[categorical_vars])
 
-options_cat = {col: [{"label": i, "value": i} for i in sorted(df[col].unique())] for col in categorical_vars}
-
 column = df.pop("Order Success")
 df.insert(0, "Order Success", column)
 
@@ -83,10 +81,10 @@ app.layout =  html.Div(id="body",className="e4_body",children=[
                 dcc.Input(id="input_1", type="number", placeholder="Días envío", style={"width":"120px"}),
                 dcc.Input(id="input_5", type="number", placeholder="Precio Producto", style={"width":"120px"}),
                 dcc.Input(id="input_6", type="number", placeholder="Ratio Descuento", style={"width":"120px"}),
-                dcc.Dropdown(id="input_2", options=options_cat["Market"], placeholder="Mercado", style={"width":"140px"}),
-                dcc.Dropdown(id="input_3", options=options_cat["Order Region"], placeholder="Región", style={"width":"140px"}),
-                dcc.Dropdown(id="input_4", options=options_cat["Category Name"], placeholder="Categoría", style={"width":"140px"}),
-                dcc.Dropdown(id="input_7", options=options_cat["Shipping Mode"], placeholder="Tipo Envío", style={"width":"140px"}),
+                dcc.Dropdown(id="input_2", options=df_original["Market"], placeholder="Mercado", style={"width":"130px"}),
+                dcc.Dropdown(id="input_3", options=df_original["Order Region"], placeholder="Región", style={"width":"130px"}),
+                dcc.Dropdown(id="input_4", options=df_original["Category Name"], placeholder="Categoría", style={"width":"130px"}),
+                dcc.Dropdown(id="input_7", options=df_original["Shipping Mode"], placeholder="Tipo Envío", style={"width":"130px"}),
                 html.Button(id="button", className="e4_button", children="Enviar", n_clicks=0)
             ]),
             html.P(["predicción: riesgo de fracaso del ",probability_text,"%"],className="e4_predict")
