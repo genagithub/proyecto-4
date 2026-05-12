@@ -109,34 +109,49 @@ app.layout =  html.Div(id="body",className="e4_body",children=[
 def get_risk_prob(n_clicks, var_1, var_2, var_3, var_4, var_5, var_6, var_7):
 
     fig_update = go.Figure(fig_pca)
-    
-    if n_clicks is not None and n_clicks > 0:
-        new_object = pd.DataFrame({
-            "Days for shipment (scheduled)": [int(var_1)],
-            "Market": [var_2],
-            "Order Region": [var_3],
-            "Category Name": [var_4],
-            "Product Price": [float(var_5)],
-            "Discount Ratio": [float(var_6)],
-            "Shipping Mode": [var_7]
-        })
+    prob_fail_text = "0.00"
+    style_res = {"color": "black"}
 
-        obj_num_scaled = scaler.transform(new_object[numeric_vars])
-        df_obj_num_scaled = pd.DataFrame(obj_num_scaled, columns=numeric_vars)
+    if n_clicks and all(v is not None for v in [var_1, var_2, var_3, var_4, var_5, var_6, var_7]):
+        try:
+            new_object = pd.DataFrame({
+                "Days for shipment (scheduled)": [int(var_1)],
+                "Category Name": [var_4],
+                "Market": [var_2],
+                "Order Region": [var_3],
+                "Product Price": [float(var_5)],
+                "Discount Ratio": [float(var_6)],
+                "Shipping Mode": [var_7]
+            })
 
-        obj_pca = pca.transform(obj_num_scaled)
-        df_obj_pca = pd.DataFrame(obj_pca, columns=["PC1", "PC2"])
-      
-        df_obj_cat = pd.DataFrame(encoder.transform(new_object[categorical_vars]), columns=categorical_vars)
+            obj_num_scaled = scaler.transform(new_object[numeric_vars])
+            obj_cat_enc = encoder.transform(new_object[categorical_vars])
+            
+            df_num = pd.DataFrame(obj_num_scaled, columns=numeric_vars)
+            df_cat = pd.DataFrame(obj_cat_enc, columns=categorical_vars)
+            object_to_predict = pd.concat([df_num, df_cat], axis=1)[X_train_columns]
 
-        object_to_predict = pd.concat([df_obj_num_scaled, df_obj_cat], axis=1)[X_train_columns]
-      
-        prob_fail = bagging_knn.predict_proba(object_to_predict)[0, 0] * 100
-        color_res = "red" if prob_fail > 45 else "green"
+            prob_fail = bagging_knn.predict_proba(object_to_predict)[0, 0] * 100
+            prob_fail_text = f"{prob_fail:.2f}"
+            color_res = "red" if prob_fail > 45 else "green"
+            style_res = {"color": color_res}
 
-        fig_update.add_trace(go.Scatter(x=df_obj_pca["PC1"], y=df_obj_pca["PC2"], mode="markers", marker=dict(color="blueviolet", size=15, symbol="star"), name="Nuevo producto"))
+            combined_for_pca = np.hstack([obj_cat_enc, obj_num_scaled])
+            obj_pca = pca.transform(combined_for_pca)
 
-    return fig_update, f"{prob_fail:.2f}", {"color": color_res}
+            fig_update.add_trace(go.Scatter(
+                x=[obj_pca[0, 0]], 
+                y=[obj_pca[0, 1]], 
+                mode="markers", 
+                marker=dict(color="blueviolet", size=15, symbol="star"), 
+                name="Nueva orden"
+            ))
+            
+        except Exception as e:
+            print(f"Error en el cálculo: {e}")
+            prob_fail_text = "Error"
+
+    return fig_update, prob_fail_text, style_res
 
 
 if __name__ == "__main__":
