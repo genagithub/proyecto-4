@@ -44,7 +44,7 @@ a {
     height:100%;
 
 }
-.input_div{
+.e4_input_div{
     width: 100%;
     display: flex;
     flex-direction:row;
@@ -54,7 +54,7 @@ a {
 .input{
     width: 125px;
 }
-.input_button:hover{
+.e4_button:hover{
     cursor:pointer;
 }
 .e4_predict{
