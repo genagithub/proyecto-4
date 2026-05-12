@@ -78,13 +78,13 @@ app.layout =  html.Div(id="body",className="e4_body",children=[
         html.Div(className="e4_graph_div",children=[
             dcc.Graph(id="graph_pca",className="e4_graph",figure=fig_pca),
             html.Div(id="input_div", style={"display":"flex","flexWrap":"wrap","gap":"10px"}, children=[
-                dcc.Input(id="input_1", type="number", placeholder="Días envío", style={"width":"115px"}),
-                dcc.Input(id="input_5", type="number", placeholder="Precio Producto", style={"width":"115px"}),
-                dcc.Input(id="input_6", type="number", placeholder="Ratio Descuento", style={"width":"115px"}),
-                dcc.Dropdown(id="input_2", options=df_original["Market"].unique(), placeholder="Mercado", style={"width":"120px"}),
-                dcc.Dropdown(id="input_3", options=df_original["Order Region"].unique(), placeholder="Región", style={"width":"120px"}),
-                dcc.Dropdown(id="input_4", options=df_original["Category Name"].unique(), placeholder="Categoría", style={"width":"120px"}),
-                dcc.Dropdown(id="input_7", options=df_original["Shipping Mode"].unique(), placeholder="Tipo Envío", style={"width":"120px"}),
+                dcc.Input(id="input_1", type="number", placeholder="Días envío", style={"width":"75px"}),
+                dcc.Input(id="input_5", type="number", placeholder="Precio Producto", style={"width":"75px"}),
+                dcc.Input(id="input_6", type="number", placeholder="Ratio Descuento", style={"width":"75px"}),
+                dcc.Dropdown(id="input_2", options=df_original["Market"].unique(), placeholder="Mercado", style={"width":"150px"}),
+                dcc.Dropdown(id="input_3", options=df_original["Order Region"].unique(), placeholder="Región", style={"width":"150px"}),
+                dcc.Dropdown(id="input_4", options=df_original["Category Name"].unique(), placeholder="Categoría", style={"width":"150px"}),
+                dcc.Dropdown(id="input_7", options=df_original["Shipping Mode"].unique(), placeholder="Tipo Envío", style={"width":"150px"}),
                 html.Button(id="button", className="e4_button", children="Enviar", n_clicks=0)
             ]),
             html.P(["predicción: riesgo de fracaso del ",probability_text,"%"],className="e4_predict")
