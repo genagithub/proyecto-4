@@ -112,7 +112,7 @@ def get_risk_prob(n_clicks, var_1, var_2, var_3, var_4, var_5, var_6, var_7):
     prob_fail_text = "0.00"
     style_res = {"color": "black"}
 
-    if n_clicks and all(v is not None for v in [var_1, var_2, var_3, var_4, var_5, var_6, var_7]):
+    if n_clicks and all(v not in [None, ''] for v in [var_1, var_2, var_3, var_4, var_5, var_6, var_7]):
         try:
             new_object = pd.DataFrame({
                 "Days for shipment (scheduled)": [float(var_1)],
@@ -136,7 +136,7 @@ def get_risk_prob(n_clicks, var_1, var_2, var_3, var_4, var_5, var_6, var_7):
             color_res = "red" if prob_fail > 45 else "green"
             style_res = {"color": color_res}
 
-            X_for_pca = np.hstack([obj_cat_enc, obj_num_scaled])
+            X_for_pca = np.concatenate([obj_cat_enc, obj_num_scaled], axis=1)
             obj_pca = pca.transform(X_for_pca)
 
             fig_update.add_trace(go.Scatter(
