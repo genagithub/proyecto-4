@@ -76,7 +76,7 @@ app.layout =  html.Div(id="body",className="e4_body",children=[
     html.Div(id="dashboard",className="e4_dashboard",children=[
         html.Div(className="e4_graph_div",children=[
             dcc.Graph(id="graph_pca",className="e4_graph",figure=fig_pca),
-            html.Form(id="input_div",className="input_div",children=[
+            html.Div(id="input_div",className="input_div",children=[
                 dcc.Input(id="input_1",className="input",type="text",placeholder="Días de envío (esq.)",size="7"),
                 dcc.Input(id="input_2",className="input",type="text",placeholder="Mercado objetivo",size="7"),
                 dcc.Input(id="input_3",className="input",type="text",placeholder="Región específica",size="7"),
