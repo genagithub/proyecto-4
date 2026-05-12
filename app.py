@@ -132,7 +132,7 @@ def get_risk_prob(n_clicks, var_1, var_2, var_3, var_4, var_5, var_6, var_7):
                                   
             df_num = pd.DataFrame(obj_num_scaled, columns=numeric_vars)
             df_cat = pd.DataFrame(obj_cat_enc, columns=categorical_vars)
-            object_to_predict = pd.concat([df_num, df_cat], axis=1)[X_train_columns]ns]
+            object_to_predict = pd.concat([df_num, df_cat], axis=1)[X_train_columns]
 
             prob_fail = bagging_knn.predict_proba(object_to_predict)[0, 0] * 100
             prob_fail_text = f"{prob_fail:.2f}"
