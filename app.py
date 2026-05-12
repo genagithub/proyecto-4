@@ -30,8 +30,9 @@ numeric_vars = ["Days for shipment (scheduled)", "Product Price", "Discount Rati
 scaler = StandardScaler()
 df[numeric_vars] = scaler.fit_transform(df[numeric_vars])
 
-encoder = OrdinalEncoder()
-df[categorical_vars] = encoder.fit_transform(df[categorical_vars])
+encoder = OrdinalEncoder(handle_unknown='use_encoded_value', unknown_value=-1)
+encoder.fit(df[categorical_vars])
+df[categorical_vars] = encoder.transform(df[categorical_vars])
 
 column = df.pop("Order Success")
 df.insert(0, "Order Success", column)
@@ -139,8 +140,8 @@ def get_risk_prob(n_clicks, var_1, var_2, var_3, var_4, var_5, var_6, var_7):
             obj_pca_coords  = pca.transform(X_for_pca)
 
             fig_update.add_trace(go.Scatter(
-                x=[float(obj_pca_coords[0, 0])], 
-                y=[float(obj_pca_coords[0, 1])], 
+                x=[obj_pca_coords[0, 0]], 
+                y=[obj_pca_coords[0, 1]], 
                 mode="markers", 
                 marker=dict(color="blueviolet", size=20, symbol="star", line=dict(width=2, color="white")), 
                 name="Nueva orden"
