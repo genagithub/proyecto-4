@@ -34,6 +34,8 @@ encoder = OrdinalEncoder(handle_unknown='use_encoded_value', unknown_value=-1)
 encoder.fit(df[categorical_vars])
 df[categorical_vars] = encoder.transform(df[categorical_vars])
 
+options_cat = {col: [{"label": i, "value": i} for i in sorted(df[col].unique())] for col in categorical_vars}
+
 column = df.pop("Order Success")
 df.insert(0, "Order Success", column)
 
@@ -77,15 +79,15 @@ app.layout =  html.Div(id="body",className="e4_body",children=[
     html.Div(id="dashboard",className="e4_dashboard",children=[
         html.Div(className="e4_graph_div",children=[
             dcc.Graph(id="graph_pca",className="e4_graph",figure=fig_pca),
-            html.Div(id="input_div",className="input_div",children=[
-                dcc.Input(id="input_1",className="input",type="text",placeholder="Días de envío (esq.)",size="7"),
-                dcc.Input(id="input_2",className="input",type="text",placeholder="Mercado objetivo",size="7"),
-                dcc.Input(id="input_3",className="input",type="text",placeholder="Región específica",size="7"),
-                dcc.Input(id="input_4",className="input",type="text",placeholder="Categoría asignada",size="7"),
-                dcc.Input(id="input_5",className="input",type="text",placeholder="Precio del producto",size="7"),
-                dcc.Input(id="input_6",className="input",type="text",placeholder="Ratio del descuento",size="7"),
-                dcc.Input(id="input_7",className="input",type="text",placeholder="Tipo de envío",size="7"),
-                html.Button(id="button",className="button",children="Enviar",n_clicks=0)
+            html.Div(id="input_div", style={"display":"flex","flexWrap":"wrap","gap":"10px"}, children=[
+                dcc.Input(id="input_1", type="number", placeholder="Días envío", style={"width":"140px"}),
+                dcc.Input(id="input_5", type="number", placeholder="Precio Producto", style={"width":"140px"}),
+                dcc.Input(id="input_6", type="number", placeholder="Ratio Descuento", style={"width":"140px"}),
+                dcc.Dropdown(id="input_2", options=options_cat["Market"], placeholder="Mercado", style={"width":"180px"}),
+                dcc.Dropdown(id="input_3", options=options_cat["Order Region"], placeholder="Región", style={"width":"180px"}),
+                dcc.Dropdown(id="input_4", options=options_cat["Category Name"], placeholder="Categoría", style={"width":"180px"}),
+                dcc.Dropdown(id="input_7", options=options_cat["Shipping Mode"], placeholder="Tipo Envío", style={"width":"180px"}),
+                html.Button(id="button", children="Enviar", n_clicks=0, className="e4_button")
             ]),
             html.P(["predicción: riesgo de fracaso del ",probability_text,"%"],className="e4_predict")
         ])
@@ -112,7 +114,7 @@ def get_risk_prob(n_clicks, var_1, var_2, var_3, var_4, var_5, var_6, var_7):
     prob_fail_text = "0.00"
     style_res = {"color": "black"}
 
-    if n_clicks and all(v not in [None, ''] for v in [var_1, var_2, var_3, var_4, var_5, var_6, var_7]):
+    if n_clicks > 0 and all(v not in [None, ''] for v in [var_1, var_2, var_3, var_4, var_5, var_6, var_7]):
         try:
             new_object = pd.DataFrame({
                 "Days for shipment (scheduled)": [float(var_1)],
