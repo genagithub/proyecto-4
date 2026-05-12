@@ -116,20 +116,23 @@ def get_risk_prob(n_clicks, var_1, var_2, var_3, var_4, var_5, var_6, var_7):
         try:
             new_object = pd.DataFrame({
                 "Days for shipment (scheduled)": [float(var_1)],
-                "Product Price": [float(var_5)],
-                "Discount Ratio": [float(var_6)],
-                "Category Name": [var_4],
                 "Market": [var_2],
                 "Order Region": [var_3],
+                "Category Name": [var_4],
+                "Product Price": [float(var_5)],
+                "Discount Ratio": [float(var_6)],
                 "Shipping Mode": [var_7]
             })
 
             obj_num_scaled = scaler.transform(new_object[numeric_vars])
             obj_cat_enc = encoder.transform(new_object[categorical_vars])
-            
+
+            X_for_pca = np.hstack([obj_cat_enc, obj_num_scaled])
+            obj_pca = pca.transform(X_for_pca)
+                                  
             df_num = pd.DataFrame(obj_num_scaled, columns=numeric_vars)
             df_cat = pd.DataFrame(obj_cat_enc, columns=categorical_vars)
-            object_to_predict = pd.concat([df_num, df_cat], axis=1)[X_train_columns]
+            object_to_predict = pd.concat([df_num, df_cat], axis=1)[X_train_columns]ns]
 
             prob_fail = bagging_knn.predict_proba(object_to_predict)[0, 0] * 100
             prob_fail_text = f"{prob_fail:.2f}"
