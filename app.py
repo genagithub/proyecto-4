@@ -115,12 +115,12 @@ def get_risk_prob(n_clicks, var_1, var_2, var_3, var_4, var_5, var_6, var_7):
     if n_clicks and all(v is not None for v in [var_1, var_2, var_3, var_4, var_5, var_6, var_7]):
         try:
             new_object = pd.DataFrame({
-                "Days for shipment (scheduled)": [int(var_1)],
+                "Days for shipment (scheduled)": [float(var_1)],
+                "Product Price": [float(var_5)],
+                "Discount Ratio": [float(var_6)],
                 "Category Name": [var_4],
                 "Market": [var_2],
                 "Order Region": [var_3],
-                "Product Price": [float(var_5)],
-                "Discount Ratio": [float(var_6)],
                 "Shipping Mode": [var_7]
             })
 
