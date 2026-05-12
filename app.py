@@ -107,7 +107,6 @@ app.layout =  html.Div(id="body",className="e4_body",children=[
 )
 
 def get_risk_prob(n_clicks, var_1, var_2, var_3, var_4, var_5, var_6, var_7):
-
     fig_update = go.Figure(fig_pca)
     prob_fail_text = "0.00"
     style_res = {"color": "black"}
@@ -127,9 +126,6 @@ def get_risk_prob(n_clicks, var_1, var_2, var_3, var_4, var_5, var_6, var_7):
             obj_num_scaled = scaler.transform(new_object[numeric_vars])
             obj_cat_enc = encoder.transform(new_object[categorical_vars])
 
-            X_for_pca = np.hstack([obj_cat_enc, obj_num_scaled])
-            obj_pca = pca.transform(X_for_pca)
-                                  
             df_num = pd.DataFrame(obj_num_scaled, columns=numeric_vars)
             df_cat = pd.DataFrame(obj_cat_enc, columns=categorical_vars)
             object_to_predict = pd.concat([df_num, df_cat], axis=1)[X_train_columns]
@@ -146,13 +142,13 @@ def get_risk_prob(n_clicks, var_1, var_2, var_3, var_4, var_5, var_6, var_7):
                 x=[obj_pca[0, 0]], 
                 y=[obj_pca[0, 1]], 
                 mode="markers", 
-                marker=dict(color="blueviolet", size=18, symbol="star", line=dict(width=2, color="white")), 
+                marker=dict(color="blueviolet", size=20, symbol="star", line=dict(width=2, color="white")), 
                 name="Nueva orden"
             ))
             
         except Exception as e:
             print(f"Error en el cálculo: {e}")
-            prob_fail_text = "Error"
+            prob_fail_text = "Error de datos"
 
     return fig_update, prob_fail_text, style_res
 
