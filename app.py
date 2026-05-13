@@ -30,7 +30,7 @@ numeric_vars = ["Days for shipment (scheduled)", "Product Price", "Discount Rati
 scaler = StandardScaler()
 df[numeric_vars] = scaler.fit_transform(df[numeric_vars])
 
-encoder = OrdinalEncoder(handle_unknown='use_encoded_value', unknown_value=-1)
+encoder = OrdinalEncoder(handle_unknown="use_encoded_value", unknown_value=-1)
 encoder.fit(df[categorical_vars])
 df[categorical_vars] = encoder.transform(df[categorical_vars])
 
@@ -112,7 +112,8 @@ def get_risk_prob(n_clicks, var_1, var_2, var_3, var_4, var_5, var_6, var_7):
     prob_fail_text = "0.00"
     style_res = {"color": "black"}
 
-    if n_clicks > 0 and all(v not in [None, ''] for v in [var_1, var_2, var_3, var_4, var_5, var_6, var_7]):
+    inputs = [var_1, var_2, var_3, var_4, var_5, var_6, var_7]
+    if n_clicks > 0 and all(v is not None for v in inputs):
         try:
             new_object = pd.DataFrame({
                 "Days for shipment (scheduled)": [float(var_1)],
@@ -143,7 +144,7 @@ def get_risk_prob(n_clicks, var_1, var_2, var_3, var_4, var_5, var_6, var_7):
                 x=[obj_pca_coords[0, 0]], 
                 y=[obj_pca_coords[0, 1]], 
                 mode="markers", 
-                marker=dict(color="blueviolet", size=20, symbol="star", line=dict(width=2, color="white")), 
+                marker=dict(color="blueviolet", size=18, symbol="star", line=dict(width=2, color="white")), 
                 name="Nueva orden"
             ))
             
