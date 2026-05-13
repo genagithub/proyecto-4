@@ -42,7 +42,7 @@ X_train_columns = df.columns[1:]
 knn_classifier = KNeighborsClassifier(n_neighbors=5)
 
 bagging_knn = BaggingClassifier(estimator=knn_classifier,
-                                n_estimators=50,
+                                n_estimators=100,
                                 max_samples=0.3,
                                 bootstrap=True,
                                 n_jobs=1)
@@ -87,7 +87,7 @@ app.layout =  html.Div(id="body",className="e4_body",children=[
                 dcc.Dropdown(id="input_7", options=df_original["Shipping Mode"].unique(), placeholder="Tipo Envío", style={"width":"150px"}),
                 html.Button(id="button", className="e4_button", children="Enviar", n_clicks=0)
             ]),
-            html.P(["predicción: riesgo de fracaso del ",probability_text,"%"],className="e4_predict")
+            html.P(["predicción: riesgo de fracaso del ",probability_text],className="e4_predict")
         ])
     ])
 ])
@@ -109,14 +109,14 @@ app.layout =  html.Div(id="body",className="e4_body",children=[
 
 def get_risk_prob(n_clicks, var_1, var_2, var_3, var_4, var_5, var_6, var_7):
     fig_update = go.Figure(fig_pca)
-    prob_fail_text = "0.00"
+    prob_fail_text = "0.00%"
     style_res = {"color": "black"}
 
     inputs = [var_1, var_2, var_3, var_4, var_5, var_6, var_7]
     if n_clicks > 0 and all(v is not None for v in inputs):
         try:
             new_object = pd.DataFrame({
-                "Days for shipment (scheduled)": [var_1],
+                "Days for shipment (scheduled)": [int(var_1)],
                 "Market": [var_2],
                 "Order Region": [var_3],
                 "Category Name": [var_4],
@@ -134,7 +134,7 @@ def get_risk_prob(n_clicks, var_1, var_2, var_3, var_4, var_5, var_6, var_7):
 
             probs = bagging_knn.predict_proba(object_to_predict)
             prob_fail = probs[0][0] * 100 
-            prob_fail_text = f"{prob_fail:.2f}"
+            prob_fail_text = f"{round(prob_fail, 2)}%"
             color_res = "red" if prob_fail > 45 else "green"
             style_res = {"color": color_res}
 
