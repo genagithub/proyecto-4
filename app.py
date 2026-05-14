@@ -145,12 +145,15 @@ def get_risk_prob(n_clicks, var_1, var_2, var_3, var_4, var_5, var_6, var_7):
                 factor = prob_fail / 45
                 hue = int(120 - (factor * 120))
                 color_res = f"hsl({hue}, 100%, 45%)"
+                style_res = {"color":color_res}
             elif 45 < prob_fail <= 50:
                 color_res = "hsl(0, 100%, 45%)"
+                style_res = {"color":color_res}
             else:
                 factor_oscuro = (prob_fail - 50) / 50
                 lightness = int(45 - (factor_oscuro * 25)) 
                 color_res = f"hsl(0, 100%, {lightness}%)"
+                style_res = {"color":color_res}
               
             obj_pca_coords  = pca.transform(object_to_predict)
 
