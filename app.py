@@ -136,9 +136,22 @@ def get_risk_prob(n_clicks, var_1, var_2, var_3, var_4, var_5, var_6, var_7):
             probs = bagging_knn.predict_proba(object_to_predict)
             prob_fail = probs[0][0] * 100 
             prob_fail_text = f"{prob_fail:.2f}%"
-            color_res = "red" if prob_fail > 45 else "green"
-            style_res = {"color": color_res}
+          
+            factor = prob_fail / 45
+            hue = int(120 - (factor * 120))
+            color_res = f"hsl({hue}, 100%, 45%)" 
 
+            if prob_fail <= 45:
+                factor = prob_fail / 45
+                hue = int(120 - (factor * 120))
+                color_res = f"hsl({hue}, 100%, 45%)"
+            elif 45 < prob_fail <= 50:
+                color_res = "hsl(0, 100%, 45%)"
+            else:
+                factor_oscuro = (prob_fail - 50) / 50
+                lightness = int(45 - (factor_oscuro * 25)) 
+                color_res = f"hsl(0, 100%, {lightness}%)"
+              
             obj_pca_coords  = pca.transform(object_to_predict)
 
             fig_update.add_trace(go.Scatter(
