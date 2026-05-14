@@ -139,7 +139,7 @@ def get_risk_prob(n_clicks, var_1, var_2, var_3, var_4, var_5, var_6, var_7):
             color_res = "red" if prob_fail > 45 else "green"
             style_res = {"color": color_res}
 
-            obj_pca_coords  = pca.transform(X_for_pca)
+            obj_pca_coords  = pca.transform(object_to_predict)
 
             fig_update.add_trace(go.Scatter(
                 x=[obj_pca_coords[0, 0]], 
