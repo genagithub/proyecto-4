@@ -151,7 +151,7 @@ def get_risk_prob(n_clicks, var_1, var_2, var_3, var_4, var_5, var_6, var_7):
             
         except Exception as e:
             print(f"Error en el cálculo: {e}")
-            prob_fail_text = "Error de datos"
+            prob_fail_text = "ERROR"
 
     return fig_update, prob_fail_text, style_res
 
