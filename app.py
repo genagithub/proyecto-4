@@ -145,7 +145,7 @@ def get_risk_prob(n_clicks, var_1, var_2, var_3, var_4, var_5, var_6, var_7):
                 x=[obj_pca_coords[0, 0]], 
                 y=[obj_pca_coords[0, 1]], 
                 mode="markers", 
-                marker=dict(color="blueviolet", size=18, symbol="star", line=dict(width=2, color="white")), 
+                marker=dict(color="blueviolet", size=16, symbol="star", line=dict(width=1, color="white")), 
                 name="Nueva orden"
             ))
             
