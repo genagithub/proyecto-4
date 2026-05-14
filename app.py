@@ -37,7 +37,8 @@ df[categorical_vars] = encoder.transform(df[categorical_vars])
 column = df.pop("Order Success")
 df.insert(0, "Order Success", column)
 
-X_train_columns = df.columns[1:] 
+X_train_columns = categorical_vars + numeric_vars
+X_train_data = df[X_train_columns]
 
 knn_classifier = KNeighborsClassifier(n_neighbors=5)
 
@@ -50,7 +51,7 @@ bagging_knn = BaggingClassifier(estimator=knn_classifier,
 bagging_knn.fit(df[X_train_columns], df["Order Success"])
 
 pca = PCA(n_components=2)
-pca_results = pca.fit_transform(df[categorical_vars+numeric_vars])
+pca_results = pca.fit_transform(X_train_data)
 
 df_pca = pd.DataFrame(pca_results, columns=["PC1", "PC2"])
 df_pca["Order Success"] = df["Order Success"].values
@@ -81,10 +82,10 @@ app.layout =  html.Div(id="body",className="e4_body",children=[
                 dcc.Input(id="input_1", type="number", placeholder="Días envío", style={"width":"75px"}),
                 dcc.Input(id="input_5", type="number", placeholder="Precio Producto", style={"width":"75px"}),
                 dcc.Input(id="input_6", type="number", placeholder="Ratio Descuento", style={"width":"75px"}),
-                dcc.Dropdown(id="input_2", options=df_original["Market"].unique(), placeholder="Mercado", style={"width":"150px"}),
-                dcc.Dropdown(id="input_3", options=df_original["Order Region"].unique(), placeholder="Región", style={"width":"150px"}),
-                dcc.Dropdown(id="input_4", options=df_original["Category Name"].unique(), placeholder="Categoría", style={"width":"150px"}),
-                dcc.Dropdown(id="input_7", options=df_original["Shipping Mode"].unique(), placeholder="Tipo Envío", style={"width":"150px"}),
+                dcc.Dropdown(id="input_2", options=[{"label": i, "value": i} for i in df_original["Market"].dropna().unique()], placeholder="Mercado", style={"width":"150px"}),
+                dcc.Dropdown(id="input_3", options=[{"label": i, "value": i} for i in df_original["Order Region"].dropna().unique()], placeholder="Región", style={"width":"150px"}),
+                dcc.Dropdown(id="input_4", options=[{"label": i, "value": i} for i in df_original["Category Name"].dropna().unique()], placeholder="Categoría", style={"width":"150px"}),
+                dcc.Dropdown(id="input_7", options=[{"label": i, "value": i} for i in df_original["Shipping Mode"].dropna().unique()], placeholder="Tipo Envío", style={"width":"150px"}),
                 html.Button(id="button", className="e4_button", children="Enviar", n_clicks=0)
             ]),
             html.P(["predicción: riesgo de fracaso del ",probability_text],className="e4_predict")
@@ -116,13 +117,13 @@ def get_risk_prob(n_clicks, var_1, var_2, var_3, var_4, var_5, var_6, var_7):
     if n_clicks > 0 and all(v is not None for v in inputs):
         try:
             new_object = pd.DataFrame({
-                "Days for shipment (scheduled)": [int(var_1)],
-                "Market": [var_2],
-                "Order Region": [var_3],
-                "Category Name": [var_4],
-                "Product Price": [var_5],
-                "Discount Ratio": [var_6],
-                "Shipping Mode": [var_7]
+                "Days for shipment (scheduled)": [float(var_1)],
+                "Market": [str(var_2)],
+                "Order Region": [str(var_3)],
+                "Category Name": [str(var_4)],
+                "Product Price": [float(var_5)],
+                "Discount Ratio": [float(var_6)],
+                "Shipping Mode": [str(var_7)]
             })
 
             obj_num_scaled = scaler.transform(new_object[numeric_vars])
@@ -130,7 +131,7 @@ def get_risk_prob(n_clicks, var_1, var_2, var_3, var_4, var_5, var_6, var_7):
 
             df_num = pd.DataFrame(obj_num_scaled, columns=numeric_vars)
             df_cat = pd.DataFrame(obj_cat_enc, columns=categorical_vars)
-            object_to_predict = pd.concat([df_num, df_cat], axis=1)[X_train_columns]
+            object_to_predict = pd.concat([df_cat, df_num], axis=1)[X_train_columns]
 
             probs = bagging_knn.predict_proba(object_to_predict)
             prob_fail = probs[0][0] * 100 
@@ -138,7 +139,6 @@ def get_risk_prob(n_clicks, var_1, var_2, var_3, var_4, var_5, var_6, var_7):
             color_res = "red" if prob_fail > 45 else "green"
             style_res = {"color": color_res}
 
-            X_for_pca = np.hstack([obj_cat_enc, obj_num_scaled])
             obj_pca_coords  = pca.transform(X_for_pca)
 
             fig_update.add_trace(go.Scatter(
