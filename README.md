@@ -5,9 +5,9 @@ La empresa proyecta sus ventas futuras en múltiples canales sin saber con certe
 
 ---
 
-#### 💡 Funcionamiento del Modelo (Detector de Riesgo)
-El núcleo de la solución se enfoca en analizar las variables clave de las ventas nuevas para identificar patrones de alerta temprana antes del cierre del acuerdo:
-- **Punto de Equilibrio Operativo:** Evalúa la viabilidad de la venta nueva en relación con la capacidad actual de la cadena de producción.
+#### 💡 Solución Implementada (Detector de Riesgo)
+El núcleo de la solución se enfoca un asistente inteligente para la toma de decisiones comerciales, protegiendo la operación de la empresa a través de tres pilares::
+- **Control de Capacidad:** Evalúa la viabilidad de la venta nueva en relación con la capacidad actual de la cadena de producción.
 - **Alertas de Incertidumbre:** Identifica contratos comerciales con baja probabilidad de éxito o que presentan un riesgo crítico de ejecución.
 - **Mitigación Preventiva:** El análisis permite aislar las operaciones riesgosas para aplicar acciones correctivas antes de comprometer la capacidad de la empresa.
 
@@ -15,9 +15,9 @@ El núcleo de la solución se enfoca en analizar las variables clave de las vent
 
 #### 🛠️ Enfoque Técnico y Despliegue
 Para la construcción de este prototipo analítico, se desarrolló una arquitectura orientada a la experiencia del usuario técnico y de negocio, priorizando la interpretabilidad del modelo:
-- **Procesamiento de Inputs:** El sistema captura de forma dinámica las variables clave en término de logística de cada nueva venta ingresada por el usuario para su evaluación inmediata.
+- **Procesamiento de Inputs:** El sistema captura de forma dinámica las variables independientes de cada nueva venta ingresada por el usuario para su evaluación inmediata.
 - **Visualización Avanzada (PCA):** Implementación de reducción de dimensiones para proyectar y visualizar de forma gráfica la posición de la nueva venta frente al histórico de la empresa.
-- **Clasificación y Score de Riesgo:** Entrenamiento de un algoritmo de clasificación binaria. El porcentaje de riesgo se calcula a partir de la probabilidad y seguridad de confianza del modelo al evaluar la transacción.
+- **Clasificación y Score de Riesgo:** Entrenamiento de un modelo de clasificación binaria. El porcentaje de riesgo se calcula a partir de la probabilidad y seguridad de confianza del modelo al evaluar la transacción.
 
 ---
 
