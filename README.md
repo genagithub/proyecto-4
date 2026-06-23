@@ -1,4 +1,4 @@
-### 💼 Evaluación de Riesgo en Planificaciones Comerciales (Ventas & Producción)
+### ⚠️ Evaluación de Riesgo en Planificaciones Comerciales (Ventas & Producción)
 
 #### 🎯 El Problema de Negocio
 La empresa proyecta sus ventas futuras en múltiples canales sin saber con certeza la probabilidad real de concreción de cada nuevo contrato. El objetivo es transformar la previsión comercial tradicional en una herramienta predictiva capaz de anticipar riesgos operativos y optimizar la asignación de recursos antes de la conclusión transaccional.
