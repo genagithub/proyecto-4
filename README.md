@@ -14,10 +14,10 @@ El núcleo de la solución se enfoca en analizar las variables clave de las vent
 ---
 
 #### 🛠️ Enfoque Técnico y Despliegue
-En lugar de depender de reportes estáticos que analizan las pérdidas de forma tardía, se aplicó un enfoque analítico avanzado para la acción inmediata:
-- Ingresar de forma dinámica los datos y condiciones de una venta nueva.
-- Visualizar de inmediato el nivel de riesgo en la conclusión transaccional del acuerdo.
-- Identificar alertas tempranas para rebalancear la planificación comercial antes de ejecutar la producción real.
+Para la construcción de este prototipo analítico, se desarrolló una arquitectura orientada a la experiencia del usuario técnico y de negocio, priorizando la interpretabilidad del modelo:
+- **Procesamiento de Inputs:** El sistema captura de forma dinámica las variables clave en término de logística de cada nueva venta ingresada por el usuario para su evaluación inmediata.
+- **Visualización Avanzada (PCA):** Implementación de reducción de dimensiones para proyectar y visualizar de forma gráfica la posición de la nueva venta frente al histórico de la empresa.
+- **Clasificación y Score de Riesgo:** Entrenamiento de un algoritmo de clasificación binaria. El porcentaje de riesgo se calcula a partir de la probabilidad y seguridad de confianza del modelo al evaluar la transacción.
 
 ---
 
