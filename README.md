@@ -7,7 +7,7 @@ La empresa proyecta sus ventas futuras en múltiples canales sin saber con certe
 
 #### 💡 Funcionamiento del Modelo (Detector de Riesgo)
 El núcleo de la solución se enfoca en analizar las variables clave de las ventas nuevas para identificar patrones de alerta temprana antes del cierre del acuerdo:
-- **Punto de Equilibrio Operativo:** El modelo evalúa la viabilidad de la venta nueva en relación con la capacidad actual de la cadena de producción.
+- **Punto de Equilibrio Operativo:** Evalúa la viabilidad de la venta nueva en relación con la capacidad actual de la cadena de producción.
 - **Alertas de Incertidumbre:** Identifica contratos comerciales con baja probabilidad de éxito o que presentan un riesgo crítico de ejecución.
 - **Mitigación Preventiva:** El análisis permite aislar las operaciones riesgosas para aplicar acciones correctivas antes de comprometer la capacidad de la empresa.
 
