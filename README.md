@@ -7,8 +7,8 @@ La empresa proyecta sus ventas futuras en múltiples canales sin saber con certe
 
 #### 💡 Solución Implementada (Detector de Riesgo)
 El núcleo de la solución se enfoca un asistente inteligente para la toma de decisiones comerciales, protegiendo la operación de la empresa a través de tres pilares::
-- **Control de Capacidad:** Evalúa la viabilidad de la venta nueva en relación con la capacidad actual de la cadena de producción, evitando la sobreventa.
-- **Alertas de Incertidumbre:** Identifica contratos comerciales con baja probabilidad de éxito o que presentan un riesgo crítico de ejecución.
+- **Viabilidad Logística:** Analiza si la combinación del destino, el tipo de envío, los días de entrega estimados, entre otras características, representan un escenario seguro o un riesgo de incumplimiento.
+- **Alertas de Fraude:** Detecta de forma temprana transacciones sospechosas, intentos de fraude o acuerdos comerciales con baja probabilidad de concretarse.
 - **Mitigación Preventiva:** El análisis permite aislar las operaciones riesgosas para aplicar acciones correctivas antes de comprometer la capacidad de la empresa.
 
 ---
