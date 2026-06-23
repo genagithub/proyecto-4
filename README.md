@@ -5,7 +5,7 @@ La empresa proyecta sus ventas futuras en múltiples canales sin saber con certe
 
 ---
 
-#### 🛠️  La Solución Técnica: Detector de Riesgo
+#### 🛠️  La Solución Técnica: Modelado de Scoring
 Para la construcción de este prototipo analítico, se desarrolló una arquitectura orientada a la experiencia del usuario técnico y de negocio, priorizando la interpretabilidad del modelo:
 - **Procesamiento de Inputs:** El sistema captura de forma dinámica las variables independientes de cada nueva venta ingresada por el usuario para su evaluación inmediata.
 - **Visualización Avanzada (PCA):** Implementación de reducción de dimensiones para proyectar y visualizar de forma gráfica la posición de la nueva venta frente al histórico de la empresa.
