@@ -22,4 +22,4 @@ El resultado final es una herramienta interactiva enfocada en un asistente intel
 
 #### 📌 Propósito de este Proyecto
 Al ser una herramienta de autoservicio estratégico, este Data Product no busca dar una única recomendación estática, sino satisfacer de forma continua las necesidades analíticas de múltiples áreas de ejecución, permitiendo que cada stakeholder extraiga sus propias conclusiones de negocio de manera autónoma.
-- **Mitigación Preventiva:** Dota al equipo de operaciones la ventaja competitiva de anticipar la viabilidad real de los nuevos contratos antes de su ejecución y transformar la incertidumbre de las ventas en previsibilidad operativa.
+- **Mitigación Preventiva:** Dota al equipo de ventas y operaciones la ventaja competitiva de anticipar la viabilidad real de los nuevos contratos antes de su ejecución y transformar la incertidumbre de las ventas en previsibilidad operativa.
