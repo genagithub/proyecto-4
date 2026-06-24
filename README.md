@@ -6,7 +6,7 @@ La empresa proyecta sus ventas futuras en múltiples canales sin saber con certe
 ---
 
 #### 🛠️  La Solución Técnica: Modelado de Scoring
-el enfoque se centró en auditar qué factores específicos elevan el riesgo de una transacción antes de su cierre, priorizando la interpretabilidad del modelo y la experiencia del usuario:
+Se centró en auditar qué factores específicos elevan el riesgo de una transacción antes de su cierre, priorizando la interpretabilidad del modelo y la experiencia del usuario a través de:
 - **Procesamiento de Inputs:** El sistema captura de forma dinámica las variables independientes de cada nueva venta ingresada por el usuario para su evaluación inmediata.
 - **Visualización Avanzada (PCA):** Implementación de reducción de dimensiones para proyectar y visualizar de forma gráfica la posición de la nueva venta frente al histórico de la empresa.
 - **Clasificación y Score de Riesgo:** Entrenamiento de un modelo de clasificación binaria. El porcentaje de riesgo se calcula a partir de la probabilidad y seguridad de confianza del modelo al evaluar la transacción.
