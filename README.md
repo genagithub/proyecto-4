@@ -22,4 +22,4 @@ El núcleo de la solución se enfoca un asistente inteligente para la toma de de
 
 #### 📌 Propósito de este Proyecto
 Al ser una herramienta de autoservicio estratégico, este Data Product no busca dar una única recomendación estática, sino satisfacer de forma continua las necesidades analíticas de múltiples áreas de ejecución, permitiendo que cada stakeholder extraiga sus propias conclusiones de negocio de manera autónoma.
-- **Mitigación Preventiva:** El análisis realizado permite aislar las operaciones riesgosas para aplicar acciones correctivas antes de comprometer la capacidad de la empresa.
+- **Mitigación Preventiva:** El análisis realizado permite aislar las operaciones riesgosas para aplicar acciones correctivas antes de comprometer la capacidad de la empresa dotando al sector de operaciones de una ventaja competitiva: transformar la incertidumbre de las ventas en previsibilidad operativa.
