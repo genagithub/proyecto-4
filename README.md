@@ -14,7 +14,7 @@ Se centró en auditar qué factores específicos elevan el riesgo de una transac
 ---
 
 #### 🚀 El Data Product: Simulador Operativo de Ventas
-Herramienta interactiva enfocada en un asistente inteligente para la toma de decisiones comerciales, protegiendo la operación de la empresa a través de dos pilares:
+El resultado final es una herramienta interactiva basada en un asistente inteligente para la toma de decisiones comerciales, protegiendo la operación de la empresa a través de dos pilares:
 - **Viabilidad Logística:** Analiza si la combinación del destino, el tipo de envío, los días de entrega estimados, entre otras características, representan un escenario seguro o un riesgo de incumplimiento.
 - **Alertas de Fraude:** Detecta de forma temprana transacciones sospechosas, intentos de fraude o acuerdos comerciales con baja probabilidad de concretarse.
 
