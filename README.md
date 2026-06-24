@@ -1,7 +1,7 @@
 ### ⚠️ Evaluación de Riesgo de Fracaso en Planificaciones Comerciales
 
 #### 🎯 El Problema de Negocio
-La empresa proyecta sus ventas futuras en múltiples canales sin saber con certeza la probabilidad real de concreción de cada nuevo contrato. El objetivo es transformar la previsión comercial tradicional en una herramienta predictiva capaz de anticipar riesgos operativos y optimizar la asignación de recursos antes de la conclusión transaccional.
+La empresa proyecta sus ventas futuras en múltiples canales sin saber con certeza la probabilidad real de concreción de cada nuevo contrato. El objetivo es transformar la previsión comercial tradicional en una herramienta predictiva capaz de anticipar riesgos operativos, proteger los recursos y asegurar la viabilidad de la ejecución antes de la conclusión transaccional.
 
 ---
 
@@ -22,4 +22,4 @@ El núcleo de la solución se enfoca un asistente inteligente para la toma de de
 
 #### 📌 Propósito de este Proyecto
 Al ser una herramienta de autoservicio estratégico, este Data Product no busca dar una única recomendación estática, sino satisfacer de forma continua las necesidades analíticas de múltiples áreas de ejecución, permitiendo que cada stakeholder extraiga sus propias conclusiones de negocio de manera autónoma.
-- **Mitigación Preventiva:** Dota al sector de operaciones la ventaja competitiva de anticipar la viabilidad real de los nuevos contratos antes de su ejecución y transformar la incertidumbre de las ventas en previsibilidad operativa.
+- **Mitigación Preventiva:** Dota al equipo de operaciones la ventaja competitiva de anticipar la viabilidad real de los nuevos contratos antes de su ejecución y transformar la incertidumbre de las ventas en previsibilidad operativa.
