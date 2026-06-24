@@ -21,5 +21,5 @@ El núcleo de la solución se enfoca un asistente inteligente para la toma de de
 ---
 
 #### 📌 Propósito de este Proyecto
-Dotar al sector de operaciones de una ventaja competitiva: anticipar la viabilidad real de los nuevos contratos antes de su ejecución. Esto permite coordinar la logística, optimizar la capacidad instalada y planificar la cadena de suministro con métricas basadas en el riesgo, transformando la incertidumbre de las ventas en previsibilidad operativa.
+Al ser una herramienta de autoservicio estratégico, este Data Product no busca dar una única recomendación estática, sino satisfacer de forma continua las necesidades analíticas de múltiples áreas de ejecución, permitiendo que cada stakeholder extraiga sus propias conclusiones de negocio de manera autónoma.
 - **Mitigación Preventiva:** El análisis realizado permite aislar las operaciones riesgosas para aplicar acciones correctivas antes de comprometer la capacidad de la empresa.
