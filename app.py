@@ -12,7 +12,7 @@ from sklearn.neighbors import KNeighborsClassifier
 from sklearn.ensemble import BaggingClassifier
 
 
-df_original = pd.read_csv("data/logistics_and_pricing.csv", encoding="latin-1")
+df_original = pd.read_csv("data/commercial_planning.csv", encoding="latin-1")
 
 final_states = ["CLOSED", "COMPLETE", "CANCELED", "SUSPECTED_FRAUD"]
 df_original = df_original[df_original["Order Status"].isin(final_states)]
