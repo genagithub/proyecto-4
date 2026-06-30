@@ -37,7 +37,7 @@ df[categorical_vars] = encoder.transform(df[categorical_vars])
 column = df.pop("Order Success")
 df.insert(0, "Order Success", column)
 
-X_train_columns = categorical_vars + numeric_vars
+X_train = categorical_vars + numeric_vars
 X_train_data = df[X_train_columns]
 
 knn_classifier = KNeighborsClassifier(n_neighbors=5)
@@ -48,7 +48,7 @@ bagging_knn = BaggingClassifier(estimator=knn_classifier,
                                 bootstrap=True,
                                 n_jobs=1)
 
-bagging_knn.fit(df[X_train_columns], df["Order Success"])
+bagging_knn.fit(df[X_train], df["Order Success"])
 
 pca = PCA(n_components=2)
 pca_results = pca.fit_transform(X_train_data)
@@ -131,7 +131,7 @@ def get_risk_prob(n_clicks, var_1, var_2, var_3, var_4, var_5, var_6, var_7):
 
             df_num = pd.DataFrame(obj_num_scaled, columns=numeric_vars)
             df_cat = pd.DataFrame(obj_cat_enc, columns=categorical_vars)
-            object_to_predict = pd.concat([df_cat, df_num], axis=1)[X_train_columns]
+            object_to_predict = pd.concat([df_cat, df_num], axis=1)[X_train]
 
             prob_fail = bagging_knn.predict_proba(object_to_predict)[0, 0] * 100 
             prob_fail_text = f"{prob_fail:.2f}%"
@@ -149,11 +149,11 @@ def get_risk_prob(n_clicks, var_1, var_2, var_3, var_4, var_5, var_6, var_7):
 
             style_res = {"color":color_res}
 
-            obj_pca_coords  = pca.transform(object_to_predict)
+            obj_pca  = pca.transform(object_to_predict)
 
             fig_update.add_trace(go.Scatter(
-                x=[obj_pca_coords[0, 0]], 
-                y=[obj_pca_coords[0, 1]], 
+                x=[obj_pca[0, 0]], 
+                y=[obj_pca[0, 1]], 
                 mode="markers", 
                 marker=dict(color="blueviolet", size=16, symbol="star", line=dict(width=1, color="white")), 
                 name="Nueva orden"
