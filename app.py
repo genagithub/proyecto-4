@@ -38,7 +38,7 @@ column = df.pop("Order Success")
 df.insert(0, "Order Success", column)
 
 X_train = categorical_vars + numeric_vars
-X_train_data = df[X_train_columns]
+X_train_data = df[X_train]
 
 knn_classifier = KNeighborsClassifier(n_neighbors=5)
 
