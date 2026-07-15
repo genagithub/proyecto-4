@@ -13,13 +13,13 @@ Se centró en auditar qué factores específicos elevan el riesgo de una transac
 
 ---
 
-#### 🚀 El Data Product: Simulador Operativo de Ventas
+#### 🚀 Solución Analítica: Simulador Operativo de Ventas
 El resultado final es una herramienta interactiva basada en un asistente inteligente para la toma de decisiones comerciales, protegiendo la operación de la empresa a través de dos pilares:
 - **Viabilidad Logística:** Analiza si la combinación del destino, el tipo de envío, los días de entrega estimados, entre otras características, representan un escenario seguro o un riesgo de incumplimiento.
 - **Alertas de Fraude:** Detecta de forma temprana transacciones sospechosas, intentos de fraude o acuerdos comerciales con baja probabilidad de concretarse.
 
 ---
 
-#### 📌 Propósito de este Proyecto
-Al ser una herramienta de autoservicio estratégico, este Data Product no busca dar una única recomendación estática, sino satisfacer de forma continua las necesidades analíticas de múltiples áreas de ejecución, permitiendo que cada stakeholder extraiga sus propias conclusiones de negocio de manera autónoma.
+#### 📌 Propósito de este Proyecto: Impacto Directo
+
 - **Mitigación Preventiva:** Dota al equipo de ventas y operaciones la ventaja competitiva de anticipar la viabilidad real de los nuevos contratos antes de su ejecución y transformar la incertidumbre de las ventas en previsibilidad operativa.
