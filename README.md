@@ -1,6 +1,6 @@
 ### ⚠️ Evaluación de Riesgo de Fracaso en Planificaciones Comerciales
 
-#### 🎯 El Problema de Negocio
+#### 🎯 El Contexto del Problema 
 La empresa proyecta sus ventas futuras en múltiples canales sin saber con certeza la probabilidad real de concreción de cada nuevo contrato. El objetivo es transformar la previsión comercial tradicional en una herramienta predictiva capaz de anticipar riesgos operativos, proteger los recursos y asegurar la viabilidad de la ejecución antes de la conclusión transaccional.
 
 ---
