@@ -6,7 +6,7 @@ La empresa proyecta sus ventas futuras en múltiples canales comerciales sin sab
 ---
 
 #### 🛠️  Enfoque Técnico y Modelado
-Se diseñó un modelo de scoring transaccional enfocado en la detección precisa de anomalías operativas, la arquitectura interna del sistema se construyó bajo un enfoque de metamodelado, combinando la capacidad de segmentación de K-Nearest Neighbors con la robustez y poder de generalización de Random Forest. Además, se aplicaron técnicas de Feature Engineering para una optimización mayor como las siguientes:
+Se diseñó un modelo de scoring transaccional enfocado en la detección precisa de anomalías operativas, la arquitectura interna del sistema se construyó bajo un enfoque de metamodelado, utilizando como algoritmo base K-Nearest Neighbors y Random Forest para el metaaprendizaje. Además, para una optimización mayor, se aplicaron técnicas de Feature Engineering como las siguientes:
 
 - **Definición de Variable Objetivo:** Se unificaron y simplificaron múltiples motivos de pérdida operativa (cancelaciones, fraudes o fallos logísticos) en una única variable objetivo binaria.
 - **Estrategia para Datos Desbalanceados:** Dado que las transacciones fallidas representan una minoría estadística crítica (8% del histórico), se aplicaron técnicas de balanceo de clases para evitar el sesgo hacia la clase mayoritaria.
