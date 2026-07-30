@@ -26,5 +26,4 @@ El resultado final es una herramienta interactiva basada en un asistente intelig
 
 #### 📌 Propósito de este Proyecto: Impacto Directo
 
-**Mitigación Preventiva:** Dota al equipo de ventas y operaciones junto la ventaja competitiva de anticipar la viabilidad real de los nuevos contratos antes de su ejecución y transformar la incertidumbre de las ventas en previsibilidad operativa.
-- **Alertas de Fraude:** Detecta de forma temprana transacciones sospechosas, intentos de fraude o acuerdos comerciales con baja probabilidad de concretarse.
+- **Mitigación Preventiva:** Dota al equipo de ventas y operaciones junto la ventaja competitiva de anticipar la viabilidad real de los nuevos contratos antes de su ejecución y transformar la incertidumbre de las ventas en previsibilidad operativa.
