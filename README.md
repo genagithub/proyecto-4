@@ -5,21 +5,26 @@ La empresa proyecta sus ventas futuras en múltiples canales comerciales sin sab
 
 ---
 
-#### 🛠️  Solución Técnica: Modelado de Scoring
-Se centró en auditar qué factores específicos elevan el riesgo de una transacción antes de su cierre, priorizando la interpretabilidad del modelo y la experiencia del usuario a través de:
-- **Procesamiento de Inputs:** El sistema captura de forma dinámica las variables independientes de cada nueva venta ingresada por el usuario para su evaluación inmediata.
-- **Visualización Avanzada (PCA):** Implementación de reducción de dimensiones para proyectar y visualizar de forma gráfica la posición de la nueva venta frente al histórico de la empresa.
-- **Clasificación y Score de Riesgo:** Entrenamiento de un modelo de clasificación binaria. El porcentaje de riesgo se calcula a partir de la probabilidad y seguridad de confianza del modelo al evaluar la transacción.
+#### 🛠️  Enfoque Técnico y Modelado
+Se diseñó un modelo de scoring transaccional enfocado en la detección precisa de anomalías operativas, la arquitectura interna del sistema se construyó bajo un enfoque de metamodelado, combinando la capacidad de segmentación de K-Nearest Neighbors con la robustez y poder de generalización de Random Forest. Además, se aplicaron técnicas de Feature Engineering para una optimización mayor como las siguientes:
+
+- **Definición de Variable Objetivo:** Se unificaron y simplificaron múltiples motivos de pérdida operativa (cancelaciones, fraudes o fallos logísticos) en una única variable objetivo binaria.
+- **Estrategia para Datos Desbalanceados:** Dado que las transacciones fallidas representan una minoría estadística crítica (8% del histórico), se aplicaron técnicas de balanceo de clases para evitar el sesgo hacia la clase mayoritaria.
+- **Preprocesamiento y Escalado de Variables:** Se implementaron pipelines de codificación para las variables categóricas y técnicas de escalado numérico en las variables independientes evitando un sesgo de influencia.
+
+
 
 ---
 
 #### 🚀 Solución Analítica: Simulador Operativo de Ventas
 El resultado final es una herramienta interactiva basada en un asistente inteligente para la toma de decisiones comerciales, protegiendo la operación de la empresa a través de dos pilares:
-- **Viabilidad Logística:** Analiza si la combinación del destino, el tipo de envío, los días de entrega estimados, entre otras características, representan un escenario seguro o un riesgo de incumplimiento.
-- **Alertas de Fraude:** Detecta de forma temprana transacciones sospechosas, intentos de fraude o acuerdos comerciales con baja probabilidad de concretarse.
+- **Procesamiento de Inputs:** Permite la introducción de combinaciones logísticas como el destino, el tipo de envío, los días de entrega estimados, entre otras características generando múltiples escenarios posibles.
+- **Visualización Reducida:** Implementa visualización de puntos de dispersión, permitiendo observar de forma gráfica la posición de la nueva planificación comercial frente al histórico de la organización.
+- **Clasificación y Score de Riesgo:** Realiza el análisis de probabilidad de cierre (Win/Loss Probability) o Churn del pipeline, retornando un valor que representa el porcentaje de fracaso sin especificar el tipo.
 
 ---
 
 #### 📌 Propósito de este Proyecto: Impacto Directo
 
-**Mitigación Preventiva:** Dota al equipo de ventas y operaciones la ventaja competitiva de anticipar la viabilidad real de los nuevos contratos antes de su ejecución y transformar la incertidumbre de las ventas en previsibilidad operativa.
+**Mitigación Preventiva:** Dota al equipo de ventas y operaciones junto la ventaja competitiva de anticipar la viabilidad real de los nuevos contratos antes de su ejecución y transformar la incertidumbre de las ventas en previsibilidad operativa.
+- **Alertas de Fraude:** Detecta de forma temprana transacciones sospechosas, intentos de fraude o acuerdos comerciales con baja probabilidad de concretarse.
