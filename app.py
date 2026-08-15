@@ -1,7 +1,5 @@
 import pandas as pd
 import numpy as np
-import seaborn as sns
-import matplotlib.pyplot as plt
 import plotly.graph_objects as go
 import dash
 from dash import html, dcc
@@ -74,7 +72,7 @@ app = dash.Dash(__name__)
 server = app.server
 
 app.layout =  html.Div(id="body",className="e4_body",children=[
-    html.A(href="https://github.com/genagithub/proyecto-4/blob/main/README.md",children=[html.H1("Evaluación de riesgo planificaciones comerciales",id="title",className="e4_title")]),
+    html.A(href="https://github.com/genagithub/proyecto-4/blob/main/README.md",children=[html.H1("Evaluación de riesgo en planificaciones comerciales",id="title",className="e4_title")]),
     html.Div(id="dashboard", className="e4_dashboard", children=[
         html.Div(className="e4_graph_div",children=[
             dcc.Graph(id="graph_pca",className="e4_graph",figure=fig_pca),
