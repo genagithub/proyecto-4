@@ -55,7 +55,7 @@ bagging_knn = BaggingClassifier(
     bootstrap=True,
     n_jobs=1             
 )
-bagging_knn.fit(X_train_processed, y_train)
+bagging_knn.fit(X_train, y_train)
 
 pca = PCA(n_components=2, random_state=42)
 pca_results = pca.fit_transform(X_train_processed)
