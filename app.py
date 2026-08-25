@@ -5,6 +5,7 @@ import dash
 from dash import html, dcc
 from dash.dependencies import Output, Input, State
 from sklearn.model_selection import train_test_split
+from imblearn.over_sampling import SMOTE
 from sklearn.preprocessing import OneHotEncoder, StandardScaler
 from sklearn.decomposition import PCA
 from sklearn.neighbors import KNeighborsClassifier
