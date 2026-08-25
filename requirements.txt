@@ -4,5 +4,6 @@ matplotlib==3.8.3
 seaborn==0.13.2
 plotly==5.20.0
 dash==2.16.1
+imbalanced-learn==0.12.3
 scikit-learn==1.5.1
 gunicorn==23.0.0
