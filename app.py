@@ -4,7 +4,7 @@ import plotly.graph_objects as go
 import dash
 from dash import html, dcc
 from dash.dependencies import Output, Input, State
-from sklearn.preprocessing import OrdinalEncoder, StandardScaler
+from sklearn.preprocessing import OneHotEncoder, StandardScaler
 from sklearn.decomposition import PCA
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.ensemble import BaggingClassifier
@@ -25,36 +25,38 @@ df = df.reset_index(drop=True)
 categorical_vars = ["Category Name", "Market", "Order Region", "Shipping Mode"]
 numeric_vars = ["Days for shipment (scheduled)", "Product Price", "Discount Ratio"]
 
-X_train, X_test, y_train, y_test = train_test_split(df[categorical_vars + numeric_vars],
-                                                    df["Order Success"],
-                                                    test_size=0.25,
-                                                    random_state=42,
-                                                    stratify=df["Order Success"])
+X_train, X_test, y_train, y_test = train_test_split(
+    df[categorical_vars + numeric_vars],
+    df["Order Success"],
+    test_size=0.2,
+    random_state=42,
+    stratify=df["Order Success"]
+)
 
 smote = SMOTE(sampling_strategy=0.176, random_state=42)
 X_train, y_train = smote.fit_resample(X_train, y_train)
 
 scaler = StandardScaler()
-X_train[numeric_vars] = scaler.fit_transform(X_train[numeric_vars])
+X_train_num = scaler.fit_transform(X_train[numeric_vars])
 
-encoder = OrdinalEncoder(handle_unknown="use_encoded_value", unknown_value=-1)
-encoder.fit(X_train[categorical_vars])
-X_train[categorical_vars] = encoder.transform(X_train[categorical_vars])
+encoder = OneHotEncoder(handle_unknown="ignore", sparse_output=False)
+X_train_cat = encoder.fit_transform(X_train[categorical_vars])
+
+X_train_processed = np.hstack((X_train_cat, X_train_num))
 
 knn_classifier = KNeighborsClassifier(n_neighbors=5)
 
 bagging_knn = BaggingClassifier(
     estimator=knn_classifier,
-    n_estimators=100,
+    n_estimators=50,       
     max_samples=0.3,
     bootstrap=True,
-    n_jobs=1  
+    n_jobs=1             
 )
+bagging_knn.fit(X_train_processed, y_train)
 
-bagging_knn.fit(X_train, y_train)
-
-pca = PCA(n_components=2)
-pca_results = pca.fit_transform(X_train_data)
+pca = PCA(n_components=2, random_state=42)
+pca_results = pca.fit_transform(X_train_processed)
 
 df_pca = pd.DataFrame(pca_results, columns=["PC1", "PC2"])
 df_pca["Order Success"] = df["Order Success"].values
