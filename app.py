@@ -6,6 +6,7 @@ from dash import html, dcc
 from dash.dependencies import Output, Input, State
 from sklearn.preprocessing import OrdinalEncoder, StandardScaler
 from sklearn.decomposition import PCA
+from prince import FAMD
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.ensemble import BaggingClassifier
 
@@ -48,10 +49,10 @@ bagging_knn = BaggingClassifier(estimator=knn_classifier,
 
 bagging_knn.fit(df[X_train], df["Order Success"])
 
-pca = PCA(n_components=2)
-pca_results = pca.fit_transform(X_train_data)
+famd = FAMD(n_components=2)
+famd_results = famd.fit_transform(X_train_data)
 
-df_pca = pd.DataFrame(pca_results, columns=["PC1", "PC2"])
+df_pca = pd.DataFrame(famd_results, columns=["PC1", "PC2"])
 df_pca["Order Success"] = df["Order Success"].values
 
 success = df_pca.loc[df_pca["Order Success"] == 1,:]
@@ -147,7 +148,7 @@ def get_risk_prob(n_clicks, var_1, var_2, var_3, var_4, var_5, var_6, var_7):
 
             style_res = {"color":color_res}
 
-            obj_pca  = pca.transform(object_to_predict)
+            obj_pca  = famd.transform(object_to_predict)
 
             fig_update.add_trace(go.Scatter(
                 x=[obj_pca[0, 0]], 
