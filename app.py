@@ -35,9 +35,6 @@ X_train, X_test, y_train, y_test = train_test_split(
     stratify=df["Order Success"]
 )
 
-smote = SMOTE(sampling_strategy=0.176, random_state=42)
-X_train, y_train = smote.fit_resample(X_train, y_train)
-
 scaler = StandardScaler()
 X_train_num = scaler.fit_transform(X_train[numeric_vars])
 
@@ -45,6 +42,9 @@ encoder = OneHotEncoder(handle_unknown="ignore", sparse_output=False)
 X_train_cat = encoder.fit_transform(X_train[categorical_vars])
 
 X_train_processed = np.hstack((X_train_cat, X_train_num))
+
+smote = SMOTE(sampling_strategy=0.176, random_state=42)
+X_train, y_train = smote.fit_resample(X_train_processed, y_train)
 
 knn_classifier = KNeighborsClassifier(n_neighbors=5)
 
