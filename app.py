@@ -6,6 +6,7 @@ from dash import html, dcc
 from dash.dependencies import Output, Input, State
 from sklearn.preprocessing import OrdinalEncoder, StandardScaler
 from sklearn.decomposition import PCA
+from prince import FAMD
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.ensemble import BaggingClassifier
 
@@ -25,48 +26,47 @@ df = df.reset_index(drop=True)
 categorical_vars = ["Category Name", "Market", "Order Region", "Shipping Mode"]
 numeric_vars = ["Days for shipment (scheduled)", "Product Price", "Discount Ratio"]
 
-scaler = StandardScaler()
-df[numeric_vars] = scaler.fit_transform(df[numeric_vars])
+for var in categorical_vars:
+    df[var] = df[var].astype("category")
 
-encoder = OrdinalEncoder(handle_unknown="use_encoded_value", unknown_value=-1)
-encoder.fit(df[categorical_vars])
-df[categorical_vars] = encoder.transform(df[categorical_vars])
+for var in numeric_vars:
+    df[var] = pd.to_numeric(df[var])
 
-column = df.pop("Order Success")
-df.insert(0, "Order Success", column)
+X_columns = categorical_vars + numeric_vars
+X_train_data = df[X_columns]
+y_train = df["Order Success"]
 
-X_train = categorical_vars + numeric_vars
-X_train_data = df[X_train]
+famd = FAMD(n_components=2, n_iter=5, random_state=42)
+famd_results = famd.fit_transform(X_train_data)
 
 knn_classifier = KNeighborsClassifier(n_neighbors=5)
 
-bagging_knn = BaggingClassifier(estimator=knn_classifier,
-                                n_estimators=100,
-                                max_samples=0.3,
-                                bootstrap=True,
-                                n_jobs=1)
+bagging_knn = BaggingClassifier(
+    estimator=knn_classifier,
+    n_estimators=100,
+    max_samples=0.3,
+    bootstrap=True,
+    n_jobs=-1,  # -1 usa todos los cores para ir más rápido
+)
 
-bagging_knn.fit(df[X_train], df["Order Success"])
+bagging_knn.fit(famd_results, y_train)
 
-pca = PCA(n_components=2)
-pca_results = pca.fit_transform(X_train_data)
+df_famd = pd.DataFrame(famd_results.values, columns=["FAMD1", "FAMD2"])
+df_famd["Order Success"] = y_train.values
 
-df_pca = pd.DataFrame(pca_results, columns=["PC1", "PC2"])
-df_pca["Order Success"] = df["Order Success"].values
-
-success = df_pca.loc[df_pca["Order Success"] == 1,:]
-fails = df_pca.loc[df_pca["Order Success"] == 0,:]
+success = df_famd.loc[df_famd["Order Success"] == 1, :]
+fails = df_famd.loc[df_famd["Order Success"] == 0, :]
 
 df_value_counts = df_original["Order Success"].value_counts(normalize=True)
 success_prc, fails_prc = round(df_value_counts.loc[1]*100,1), round(df_value_counts.loc[0]*100,1)
 
 probability_text = html.B(id="probability", children=[], style={})
 
-fig_pca = go.Figure()
-fig_pca.add_trace(go.Scatter(x=success["PC1"], y=success["PC2"], mode="markers", marker_color="green", name=f"Completadas ({success_prc}%)"))
-fig_pca.add_trace(go.Scatter(x=fails["PC1"], y=fails["PC2"], mode="markers", marker_color="red", name=f"Sin éxito ({fails_prc}%)"))
-fig_pca.update_layout(title="Resultados de órdenes históricas")
-fig_pca.update_layout(legend=dict(font=dict(size=9)))
+fig_famd = go.Figure()
+fig_famd.add_trace(go.Scatter(x=success["FAMD1"], y=success["FAMD2"], mode="markers", marker_color="green", name=f"Completadas ({success_prc}%)"))
+fig_famd.add_trace(go.Scatter(x=fails["FAMD1"], y=fails["FAMD2"], mode="markers", marker_color="red", name=f"Sin éxito ({fails_prc}%)"))
+fig_famd.update_layout(title="Resultados de órdenes históricas")
+fig_famd.update_layout(legend=dict(font=dict(size=9)))
 
 app = dash.Dash(__name__)
 server = app.server
@@ -75,7 +75,7 @@ app.layout =  html.Div(id="body",className="e4_body",children=[
     html.A(href="https://github.com/genagithub/proyecto-4/blob/main/README.md",children=[html.H1("Evaluación de riesgo en planificaciones comerciales",id="title",className="e4_title")]),
     html.Div(id="dashboard", className="e4_dashboard", children=[
         html.Div(className="e4_graph_div",children=[
-            dcc.Graph(id="graph_pca",className="e4_graph",figure=fig_pca),
+            dcc.Graph(id="graph_pca",className="e4_graph",figure=fig_famd),
             html.Div(id="input_div", style={"display":"flex","flexWrap":"wrap","gap":"10px"}, children=[
                 dcc.Input(id="input_1", type="number", placeholder="Días envío", style={"width":"75px"}),
                 dcc.Input(id="input_5", type="number", placeholder="Precio Producto", style={"width":"75px"}),
@@ -107,7 +107,8 @@ app.layout =  html.Div(id="body",className="e4_body",children=[
 )
 
 def get_risk_prob(n_clicks, var_1, var_2, var_3, var_4, var_5, var_6, var_7):
-    fig_update = go.Figure(fig_pca)
+  
+    fig_update = go.Figure(fig_famd)
     prob_fail_text = "0.00%"
     style_res = {"color": "black"}
 
@@ -124,14 +125,15 @@ def get_risk_prob(n_clicks, var_1, var_2, var_3, var_4, var_5, var_6, var_7):
                 "Shipping Mode": [str(var_7)]
             })
 
-            obj_num_scaled = scaler.transform(new_object[numeric_vars])
-            obj_cat_enc = encoder.transform(new_object[categorical_vars])
+            for var in categorical_vars:
+                new_object[var] = pd.Categorical(new_object[var], categories=df[var].cat.categories)
 
-            df_num = pd.DataFrame(obj_num_scaled, columns=numeric_vars)
-            df_cat = pd.DataFrame(obj_cat_enc, columns=categorical_vars)
-            object_to_predict = pd.concat([df_cat, df_num], axis=1)[X_train]
+            for var in numeric_vars:
+                new_object[var] = pd.to_numeric(new_object[var])
 
-            prob_fail = bagging_knn.predict_proba(object_to_predict)[0, 0] * 100 
+            object_to_predict = famd.transform(new_object[X_columns])
+
+            prob_fail = bagging_knn.predict_proba(object_to_predict)[0,0] * 100 
             prob_fail_text = f"{prob_fail:.2f}%"
 
             if prob_fail <= 45:
@@ -147,11 +149,9 @@ def get_risk_prob(n_clicks, var_1, var_2, var_3, var_4, var_5, var_6, var_7):
 
             style_res = {"color":color_res}
 
-            obj_pca  = pca.transform(object_to_predict)
-
             fig_update.add_trace(go.Scatter(
-                x=[obj_pca[0, 0]], 
-                y=[obj_pca[0, 1]], 
+                x=[object_to_predict.iloc[0, 0]], 
+                y=[object_to_predict.iloc[0, 1]], 
                 mode="markers", 
                 marker=dict(color="blueviolet", size=16, symbol="star", line=dict(width=1, color="white")), 
                 name="Nueva orden"
