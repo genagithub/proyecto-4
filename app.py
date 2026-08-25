@@ -43,10 +43,10 @@ knn_classifier = KNeighborsClassifier(n_neighbors=5)
 
 bagging_knn = BaggingClassifier(
     estimator=knn_classifier,
-    n_estimators=100,
+    n_estimators=50,
     max_samples=0.3,
     bootstrap=True,
-    n_jobs=-1,  # -1 usa todos los cores para ir más rápido
+    n_jobs=1  
 )
 
 bagging_knn.fit(famd_results, y_train)
