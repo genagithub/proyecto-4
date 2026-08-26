@@ -25,6 +25,7 @@ df = df.reset_index(drop=True)
 
 categorical_vars = ["Category Name", "Market", "Order Region", "Shipping Mode"]
 numeric_vars = ["Days for shipment (scheduled)", "Product Price", "Discount Ratio"]
+categorical_vars_pca = ["Market", "Order Region", "Shipping Mode"]
 
 X_train, X_test, y_train, y_test = train_test_split(
     df[categorical_vars + numeric_vars],
@@ -52,10 +53,16 @@ bagging_knn = BaggingClassifier(
     n_jobs=1             
 )
 
-bagging_knn.fit(X_train_processed, y_train)
+scaler_pca = StandardScaler()
+X_train_num_pca = scaler_pca.fit_transform(X_train[numeric_vars])
+
+encoder_pca = OneHotEncoder(handle_unknown="ignore", sparse_output=False)
+X_train_cat_pca = encoder_pca.fit_transform(X_train[categorical_vars_pca])
+
+X_train_processed_pca = np.hstack((X_train_cat_pca, X_train_num_pca))
 
 pca = PCA(n_components=2, random_state=42)
-pca_results = pca.fit_transform(X_train_processed)
+pca_results = pca.fit_transform(X_train_processed_pca)
 
 df_pca = pd.DataFrame(pca_results, columns=["PC1", "PC2"])
 df_pca["Order Success"] = y_train.values
@@ -150,11 +157,15 @@ def get_risk_prob(n_clicks, var_1, var_2, var_3, var_4, var_5, var_6, var_7):
 
             style_res = {"color":color_res}
 
-        obj_pca = pca.transform(object_to_predict)
+        obj_num_scaled_pca = scaler_pca.transform(new_object[numeric_vars])
+        obj_cat_enc_pca = encoder_pca.transform(new_object[categorical_vars_pca])
+        
+        object_to_plot = np.hstack((obj_cat_enc_pca, obj_num_scaled_pca))
+        obj_pca = pca.transform(object_to_plot)
 
         fig_update.add_trace(go.Scatter(
-            x=[obj_pca[0, 0]],
-            y=[obj_pca[0, 1]],
+            x=[object_to_plot[0, 0]],
+            y=[object_to_plot[0, 1]],
             mode="markers",
             marker=dict(color="blueviolet", size=15, symbol="star"),
             name="Nueva órden"
