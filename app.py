@@ -139,15 +139,21 @@ def get_risk_prob(n_clicks, var_1, var_2, var_3, var_4, var_5, var_6, var_7):
         prob_fail = bagging_knn.predict_proba(object_to_predict)[0, 0] * 100 
         prob_fail_text = f"{prob_fail:.2f}%"
 
-        if prob_fail <= 30:
-            factor = prob_fail / 45
-            hue = int(120 - (factor * 120))
-            color_res = f"hsl({hue}, 100%, 45%)"
-        elif 30 < prob_fail <= 45:
-            color_res = "hsl(0, 100%, 45%)"
+        if prob_fail <= 25:
+            factor = prob_fail / 25
+            hue = int(120 - (factor * 60))
+            color_res = f"hsl({hue}, 100%, 50%)"
+        elif 25 < prob_fail <= 50:
+            factor = (prob_fail - 25) / 25
+            hue = int(60 - (factor * 60))
+            color_res = f"hsl({hue}, 100%, 50%)"
+        elif 50 < prob_fail <= 75:
+            factor = (prob_fail - 50) / 25
+            lightness = int(50 - (factor * 15))
+            color_res = f"hsl(0, 100%, {lightness}%)"
         else:
-            dark_factor = (prob_fail - 50) / 50
-            lightness = int(45 - (dark_factor * 25))
+            factor = (prob_fail - 75) / 25
+            lightness = int(35 - (factor * 20))
             color_res = f"hsl(0, 100%, {lightness}%)"
 
             style_res = {"color":color_res}
