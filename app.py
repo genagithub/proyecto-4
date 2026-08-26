@@ -25,7 +25,6 @@ df = df.reset_index(drop=True)
 
 categorical_vars = ["Category Name", "Market", "Order Region", "Shipping Mode"]
 numeric_vars = ["Days for shipment (scheduled)", "Product Price", "Discount Ratio"]
-categorical_vars_pca = ["Market", "Order Region", "Shipping Mode"]
 
 X_train, X_test, y_train, y_test = train_test_split(
     df[categorical_vars + numeric_vars],
@@ -62,7 +61,7 @@ df_pca["Order Success"] = y_train.values
 success = df_pca.loc[df_pca["Order Success"] == 1,:]
 fails = df_pca.loc[df_pca["Order Success"] == 0,:]
 
-prc = y_train.value_counts(normalize=True)
+prc = df["Order Success"].value_counts(normalize=True)
 success_prc = round(prc.get(1, 0) * 100, 1)
 fails_prc = round(prc.get(0, 0) * 100, 1)
 
