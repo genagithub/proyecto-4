@@ -58,7 +58,7 @@ pca = PCA(n_components=2, random_state=42)
 pca_results = pca.fit_transform(X_train_processed)
 
 df_pca = pd.DataFrame(pca_results, columns=["PC1", "PC2"])
-df_pca["Order Success"] = df["Order Success"].values
+df_pca["Order Success"] = y_train.values
 
 success = df_pca.loc[df_pca["Order Success"] == 1,:]
 fails = df_pca.loc[df_pca["Order Success"] == 0,:]
