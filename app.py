@@ -132,7 +132,7 @@ def get_risk_prob(n_clicks, var_1, var_2, var_3, var_4, var_5, var_6, var_7):
         df_cat = pd.DataFrame(obj_cat_enc, columns=categorical_vars)
         object_to_predict = pd.concat([df_cat, df_num], axis=1)[categorical_vars + numeric_vars]
 
-        prob_fail = bagging_knn.predict_proba(object_processed)[0, 0] * 100 
+        prob_fail = bagging_knn.predict_proba(object_to_predict)[0, 0] * 100 
         prob_fail_text = f"{prob_fail:.2f}%"
 
         if prob_fail <= 45:
@@ -148,14 +148,14 @@ def get_risk_prob(n_clicks, var_1, var_2, var_3, var_4, var_5, var_6, var_7):
 
             style_res = {"color":color_res}
 
-        obj_pca = pca.transform(object_processed)
+        obj_pca = pca.transform(object_to_predict)
 
         fig_update.add_trace(go.Scatter(
             x=[obj_pca[0, 0]],
             y=[obj_pca[0, 1]],
             mode="markers",
             marker=dict(color="blueviolet", size=15, symbol="star"),
-            name="Nuevo producto"
+            name="Nueva órden"
         ))
 
     return fig_pca, prob_fail_text, style_res
