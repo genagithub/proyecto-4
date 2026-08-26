@@ -5,7 +5,7 @@ import dash
 from dash import html, dcc
 from dash.dependencies import Output, Input, State
 from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import OrdinalEncoder, OneHotEncoder, StandardScaler
+from sklearn.preprocessing import OrdinalEncoder, StandardScaler
 from sklearn.decomposition import PCA
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.ensemble import BaggingClassifier
@@ -53,16 +53,8 @@ bagging_knn = BaggingClassifier(
     n_jobs=1             
 )
 
-scaler_pca = StandardScaler()
-X_train_num_pca = scaler_pca.fit_transform(X_train[numeric_vars])
-
-encoder_pca = OneHotEncoder(handle_unknown="ignore", sparse_output=False)
-X_train_cat_pca = encoder_pca.fit_transform(X_train[categorical_vars_pca])
-
-X_train_processed_pca = np.hstack((X_train_cat_pca, X_train_num_pca))
-
 pca = PCA(n_components=2, random_state=42)
-pca_results = pca.fit_transform(X_train_processed_pca)
+pca_results = pca.fit_transform(X_train_processed)
 
 df_pca = pd.DataFrame(pca_results, columns=["PC1", "PC2"])
 df_pca["Order Success"] = y_train.values
@@ -157,15 +149,11 @@ def get_risk_prob(n_clicks, var_1, var_2, var_3, var_4, var_5, var_6, var_7):
 
             style_res = {"color":color_res}
 
-        obj_num_scaled_pca = scaler_pca.transform(new_object[numeric_vars])
-        obj_cat_enc_pca = encoder_pca.transform(new_object[categorical_vars_pca])
-        
-        object_to_plot = np.hstack((obj_cat_enc_pca, obj_num_scaled_pca))
-        obj_pca = pca.transform(object_to_plot)
+        obj_pca = pca.transform(object_to_predict)
 
         fig_update.add_trace(go.Scatter(
-            x=[object_to_plot[0, 0]],
-            y=[object_to_plot[0, 1]],
+            x=[obj_pca[0, 0]],
+            y=[obj_pca[0, 1]],
             mode="markers",
             marker=dict(color="blueviolet", size=15, symbol="star"),
             name="Nueva órden"
