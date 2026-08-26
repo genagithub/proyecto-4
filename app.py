@@ -69,8 +69,8 @@ fails_prc = round(prc.get(0, 0) * 100, 1)
 probability_text = html.B(id="probability",children=[],style={})
 
 fig_pca = go.Figure()
-fig_pca.add_trace(go.Scatter(x=success["PC1"], y=success["PC2"], mode="markers", marker_color="green", name=f"Completadas ({success_prc})"))
-fig_pca.add_trace(go.Scatter(x=fails["PC1"], y=fails["PC2"], mode="markers", marker_color="red", name=f"Sin Éxito ({fails_prc})"))
+fig_pca.add_trace(go.Scatter(x=success["PC1"], y=success["PC2"], mode="markers", marker_color="green", name=f"Completadas ({success_prc}%)"))
+fig_pca.add_trace(go.Scatter(x=fails["PC1"], y=fails["PC2"], mode="markers", marker_color="red", name=f"Sin Éxito ({fails_prc}%)"))
 fig_pca.update_layout(title="Resultados de Órdenes Históricas")
 fig_pca.update_layout(legend=dict(font=dict(size=9)))
 
