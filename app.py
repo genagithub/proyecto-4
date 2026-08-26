@@ -156,7 +156,7 @@ def get_risk_prob(n_clicks, var_1, var_2, var_3, var_4, var_5, var_6, var_7):
             lightness = int(35 - (factor * 20))
             color_res = f"hsl(0, 100%, {lightness}%)"
 
-            style_res = {"color":color_res}
+        style_res = {"color":color_res}
 
         obj_pca = pca.transform(object_to_predict)
 
