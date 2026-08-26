@@ -62,11 +62,15 @@ df_pca["Order Success"] = y_train.values
 success = df_pca.loc[df_pca["Order Success"] == 1,:]
 fails = df_pca.loc[df_pca["Order Success"] == 0,:]
 
+prc = y_train.value_counts(normalize=True)
+success_prc = round(prc.get(1, 0) * 100, 1)
+fails_prc = round(prc.get(0, 0) * 100, 1)
+
 probability_text = html.B(id="probability",children=[],style={})
 
 fig_pca = go.Figure()
-fig_pca.add_trace(go.Scatter(x=success["PC1"], y=success["PC2"], mode="markers", marker_color="green", name="Completadas"))
-fig_pca.add_trace(go.Scatter(x=fails["PC1"], y=fails["PC2"], mode="markers", marker_color="red", name="Sin éxito"))
+fig_pca.add_trace(go.Scatter(x=success["PC1"], y=success["PC2"], mode="markers", marker_color="green", name=f"Completadas ({success_prc})"))
+fig_pca.add_trace(go.Scatter(x=fails["PC1"], y=fails["PC2"], mode="markers", marker_color="red", name=f"Sin Éxito ({fails_prc})"))
 fig_pca.update_layout(title="Resultados de Órdenes Históricas")
 fig_pca.update_layout(legend=dict(font=dict(size=9)))
 
@@ -156,7 +160,7 @@ def get_risk_prob(n_clicks, var_1, var_2, var_3, var_4, var_5, var_6, var_7):
             y=[obj_pca[0, 1]],
             mode="markers",
             marker=dict(color="blueviolet", size=15, symbol="star"),
-            name="Nueva órden"
+            name="Nueva Órden"
         ))
 
     return fig_pca, prob_fail_text, style_res
