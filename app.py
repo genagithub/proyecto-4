@@ -78,7 +78,7 @@ app.layout =  html.Div(id="body",className="e4_body",children=[
     html.A(href="https://github.com/genagithub/proyecto-4/blob/main/README.md",children=[html.H1("Evaluación de riesgo en planificaciones comerciales",id="title",className="e4_title")]),
     html.Div(id="dashboard", className="e4_dashboard", children=[
         html.Div(className="e4_graph_div",children=[
-            dcc.Graph(id="graph_pca",className="e4_graph",figure=fig_famd),
+            dcc.Graph(id="graph_pca",className="e4_graph",figure=fig_pca),
             html.Div(id="input_div", style={"display":"flex","flexWrap":"wrap","gap":"10px"}, children=[
                 dcc.Input(id="input_1", type="number", placeholder="Días envío", style={"width":"75px"}),
                 dcc.Input(id="input_5", type="number", placeholder="Precio Producto", style={"width":"75px"}),
