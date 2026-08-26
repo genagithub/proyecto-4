@@ -35,10 +35,12 @@ X_train, X_test, y_train, y_test = train_test_split(
 )
 
 scaler = StandardScaler()
-X_train[numeric_vars] = scaler.fit_transform(X_train[numeric_vars])
+X_train_num = scaler.fit_transform(X_train[numeric_vars])
 
 encoder = OrdinalEncoder(handle_unknown="use_encoded_value", unknown_value=-1)
-X_train[categorical_vars] = encoder.fit_transform(X_train[categorical_vars])
+X_train_cat = encoder.fit_transform(X_train[categorical_vars])
+
+X_train_processed = np.hstack((X_train_cat, X_train_num))
 
 knn_classifier = KNeighborsClassifier(n_neighbors=5)
 
@@ -50,10 +52,10 @@ bagging_knn = BaggingClassifier(
     n_jobs=1             
 )
 
-bagging_knn.fit(X_train, y_train)
+bagging_knn.fit(X_train_processed, y_train)
 
 pca = PCA(n_components=2, random_state=42)
-pca_results = pca.fit_transform(X_train)
+pca_results = pca.fit_transform(X_train_processed)
 
 df_pca = pd.DataFrame(pca_results, columns=["PC1", "PC2"])
 df_pca["Order Success"] = df["Order Success"].values
