@@ -5,8 +5,7 @@ import dash
 from dash import html, dcc
 from dash.dependencies import Output, Input, State
 from sklearn.model_selection import train_test_split
-from imblearn.over_sampling import SMOTE
-from sklearn.preprocessing import OneHotEncoder, StandardScaler
+from sklearn.preprocessing import OrdinalEncoder, StandardScaler
 from sklearn.decomposition import PCA
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.ensemble import BaggingClassifier
@@ -36,29 +35,25 @@ X_train, X_test, y_train, y_test = train_test_split(
 )
 
 scaler = StandardScaler()
-X_train_num = scaler.fit_transform(X_train[numeric_vars])
+X_train[numeric_vars] = scaler.fit_transform(X_train[numeric_vars])
 
-encoder = OneHotEncoder(handle_unknown="ignore", sparse_output=False)
-X_train_cat = encoder.fit_transform(X_train[categorical_vars])
-
-X_train_processed = np.hstack((X_train_cat, X_train_num))
-
-smote = SMOTE(sampling_strategy=0.176, random_state=42)
-X_train, y_train = smote.fit_resample(X_train_processed, y_train)
+encoder = OrdinalEncoder(handle_unknown="use_encoded_value", unknown_value=-1)
+X_train[categorical_vars] = encoder.fit_transform(X_train[categorical_vars])
 
 knn_classifier = KNeighborsClassifier(n_neighbors=5)
 
 bagging_knn = BaggingClassifier(
     estimator=knn_classifier,
-    n_estimators=50,       
+    n_estimators=100,       
     max_samples=0.3,
     bootstrap=True,
     n_jobs=1             
 )
+
 bagging_knn.fit(X_train, y_train)
 
 pca = PCA(n_components=2, random_state=42)
-pca_results = pca.fit_transform(X_train_processed)
+pca_results = pca.fit_transform(X_train)
 
 df_pca = pd.DataFrame(pca_results, columns=["PC1", "PC2"])
 df_pca["Order Success"] = df["Order Success"].values
@@ -71,7 +66,7 @@ probability_text = html.B(id="probability",children=[],style={})
 fig_pca = go.Figure()
 fig_pca.add_trace(go.Scatter(x=success["PC1"], y=success["PC2"], mode="markers", marker_color="green", name="Completadas"))
 fig_pca.add_trace(go.Scatter(x=fails["PC1"], y=fails["PC2"], mode="markers", marker_color="red", name="Sin éxito"))
-fig_pca.update_layout(title="Resultados de órdenes históricas")
+fig_pca.update_layout(title="Resultados de Órdenes Históricas")
 fig_pca.update_layout(legend=dict(font=dict(size=9)))
 
 app = dash.Dash(__name__)
@@ -133,7 +128,9 @@ def get_risk_prob(n_clicks, var_1, var_2, var_3, var_4, var_5, var_6, var_7):
         obj_num_scaled = scaler.transform(new_object[numeric_vars])
         obj_cat_enc = encoder.transform(new_object[categorical_vars])
 
-        object_processed = np.hstack((obj_cat_enc, obj_num_scaled))
+        df_num = pd.DataFrame(obj_num_scaled, columns=numeric_vars)
+        df_cat = pd.DataFrame(obj_cat_enc, columns=categorical_vars)
+        object_to_predict = pd.concat([df_cat, df_num], axis=1)[categorical_vars + numeric_vars]
 
         prob_fail = bagging_knn.predict_proba(object_processed)[0, 0] * 100 
         prob_fail_text = f"{prob_fail:.2f}%"
