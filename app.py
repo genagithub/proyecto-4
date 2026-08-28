@@ -75,8 +75,11 @@ bagging_knn = BaggingClassifier(
 
 bagging_knn.fit(X_train_processed_balanced, y_train_balanced)
 
+X_train_pca = X_train_processed.copy()
+X_train_pca[numeric_vars] = X_train[numeric_vars]
+
 pca = PCA(n_components=2, random_state=42)
-pca_results = pca.fit_transform(X_train_processed[numeric_vars] = X_train[numeric_vars])
+pca_results = pca.fit_transform(X_train_pca)
 
 df_pca = pd.DataFrame(pca_results, columns=["PC1", "PC2"])
 df_pca["Order Success"] = y_train.values
