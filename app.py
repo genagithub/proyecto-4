@@ -155,7 +155,7 @@ def get_risk_prob(n_clicks, var_1, var_2, var_3, var_4, var_5, var_6, var_7):
 
         object_processed = np.hstack((obj_cat_encoded, obj_num_scaled))
 
-        prob_fail = bagging_knn.predict_proba(object_to_predict)[0,0] * 100 
+        prob_fail = bagging_knn.predict_proba(object_processed)[0,0] * 100 
         prob_fail_text = f"{prob_fail:.2f}%"
 
         if prob_fail <= 25:
@@ -177,7 +177,7 @@ def get_risk_prob(n_clicks, var_1, var_2, var_3, var_4, var_5, var_6, var_7):
 
         style_res = {"color":color_res}
 
-        obj_pca = pca.transform(object_to_predict)
+        obj_pca = pca.transform(object_processed)
 
         fig_update.add_trace(go.Scatter(
             x=[obj_pca[0, 0]],
