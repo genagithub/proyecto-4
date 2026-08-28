@@ -73,13 +73,13 @@ bagging_knn = BaggingClassifier(
     n_jobs=1             
 )
 
-bagging_knn.fit_transform(X_train_processed_balanced, y_train_balanced)
+bagging_knn.fit(X_train_processed_balanced, y_train_balanced)
 
 pca = PCA(n_components=2, random_state=42)
 pca_results = pca.fit_transform(X_train_processed)
 
 df_pca = pd.DataFrame(pca_results, columns=["PC1", "PC2"])
-df_pca["Order Success"] = y_train_balanced.values
+df_pca["Order Success"] = y_train.values
 
 success = df_pca.loc[df_pca["Order Success"] == 1,:]
 fails = df_pca.loc[df_pca["Order Success"] == 0,:]
