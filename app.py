@@ -151,13 +151,11 @@ def get_risk_prob(n_clicks, var_1, var_2, var_3, var_4, var_5, var_6, var_7):
         })
 
         obj_num_scaled = scaler.transform(new_object[numeric_vars])
-        obj_cat_enc = encoder.transform(new_object[categorical_vars])
+        obj_cat_encoded = encoder.transform(new_object[categorical_vars])
 
-        df_num = pd.DataFrame(obj_num_scaled, columns=numeric_vars)
-        df_cat = pd.DataFrame(obj_cat_enc, columns=categorical_vars)
-        object_to_predict = pd.concat([df_cat, df_num], axis=1)[categorical_vars + numeric_vars]
+        object_processed = np.hstack((obj_cat_encoded, obj_num_scaled))
 
-        prob_fail = bagging_knn.predict_proba(object_to_predict)[0, 0] * 100 
+        prob_fail = bagging_knn.predict_proba(object_to_predict)[0,0] * 100 
         prob_fail_text = f"{prob_fail:.2f}%"
 
         if prob_fail <= 25:
