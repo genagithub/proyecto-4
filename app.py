@@ -61,7 +61,7 @@ X_train_cat = encoder.fit_transform(X_train[categorical_vars], y_train)
 X_train_processed = pd.concat([X_train_cat, X_train_num], axis=1)
 
 smote = SMOTE(sampling_strategy=0.25, random_state=42)
-X_train_processed_balanced, y_train = smote.fit_resample(X_train_processed, y_train)
+X_train_processed_balanced, y_train_balanced = smote.fit_resample(X_train_processed, y_train)
 
 knn_classifier = KNeighborsClassifier(n_neighbors=5)
 
@@ -73,11 +73,13 @@ bagging_knn = BaggingClassifier(
     n_jobs=1             
 )
 
+bagging_knn.fit_transform(X_train_processed_balanced, y_train_balanced)
+
 pca = PCA(n_components=2, random_state=42)
 pca_results = pca.fit_transform(X_train_processed)
 
 df_pca = pd.DataFrame(pca_results, columns=["PC1", "PC2"])
-df_pca["Order Success"] = y_train.values
+df_pca["Order Success"] = y_train_balanced.values
 
 success = df_pca.loc[df_pca["Order Success"] == 1,:]
 fails = df_pca.loc[df_pca["Order Success"] == 0,:]
