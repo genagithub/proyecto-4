@@ -5,7 +5,9 @@ import dash
 from dash import html, dcc
 from dash.dependencies import Output, Input, State
 from sklearn.model_selection import train_test_split
-from sklearn.preprocessing import OrdinalEncoder, StandardScaler
+from category_encoders import TargetEncoder
+from sklearn.preprocessing import StandardScaler
+from imblearn.over_sampling import SMOTE
 from sklearn.decomposition import PCA
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.ensemble import BaggingClassifier
@@ -23,24 +25,43 @@ df = df_original.copy()
 df.drop(columns=["Order Status","Order Item Discount"], inplace=True)
 df = df.reset_index(drop=True)
 
+Q1_discount_radio = df["Discount Ratio"].quantile(0.25)
+Q3_discount_radio = df["Discount Ratio"].quantile(0.75)
+IQR_discount_radio = Q3_discount_radio - Q1_discount_radio
+df = df.loc[~((df["Discount Ratio"] < (Q1_discount_radio - 1.5 * IQR_discount_radio)) | (df["Discount Ratio"] > (Q3_discount_radio + 1.5 * IQR_discount_radio))),:]
+
+Q1_product_price = df["Product Price"].quantile(0.25)
+Q3_product_price = df["Product Price"].quantile(0.75)
+IQR_product_price = Q3_product_price - Q1_product_price
+df = df.loc[~((df["Product Price"] < (Q1_product_price - 1.5 * IQR_product_price)) | (df["Product Price"] > (Q3_product_price + 1.5 * IQR_product_price))),:]
+
 categorical_vars = ["Category Name", "Market", "Order Region", "Shipping Mode"]
 numeric_vars = ["Days for shipment (scheduled)", "Product Price", "Discount Ratio"]
 
-X_train, X_test, y_train, y_test = train_test_split(
-    df[categorical_vars + numeric_vars],
-    df["Order Success"],
-    test_size=0.2,
-    random_state=42,
-    stratify=df["Order Success"]
-)
+X_train, X_test, y_train, y_test = train_test_split(df[categorical_vars + numeric_vars],
+                                                    df["Order Success"],
+                                                    test_size=0.2,
+                                                    random_state=42,
+                                                    stratify=df["Order Success"])
+
+umbral = 0.01
+categories_distribution = X_train["Category Name"].value_counts(normalize=True)
+valid_categories = categories_distribution[categories_distribution > umbral].index
+
+X_train["Category Name"] = X_train["Category Name"].where(X_train["Category Name"].isin(valid_categories), "OTHERS")
+X_test["Category Name"] = X_test["Category Name"].where(X_test["Category Name"].isin(valid_categories), "OTHERS")
 
 scaler = StandardScaler()
 X_train_num = scaler.fit_transform(X_train[numeric_vars])
+X_train_num = pd.DataFrame(X_train_num, columns=numeric_vars, index=X_train.index)
 
-encoder = OrdinalEncoder(handle_unknown="use_encoded_value", unknown_value=-1)
-X_train_cat = encoder.fit_transform(X_train[categorical_vars])
+encoder = TargetEncoder(cols=categorical_vars)
+X_train_cat = encoder.fit_transform(X_train[categorical_vars], y_train)
 
-X_train_processed = np.hstack((X_train_cat, X_train_num))
+X_train_processed = pd.concat([X_train_cat, X_train_num], axis=1)
+
+smote = SMOTE(sampling_strategy=0.25, random_state=42)
+X_train_processed_balanced, y_train = smote.fit_resample(X_train_processed, y_train)
 
 knn_classifier = KNeighborsClassifier(n_neighbors=5)
 
