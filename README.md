@@ -9,8 +9,8 @@ La empresa proyecta sus ventas futuras en múltiples canales comerciales sin sab
 Se diseñó un modelo de scoring transaccional enfocado en la detección precisa de anomalías operativas, la arquitectura interna del sistema se construyó bajo un enfoque de metamodelado, utilizando como algoritmo base K-Nearest Neighbors y Random Forest para el metaaprendizaje. Además, para una optimización mayor, se aplicaron técnicas de Feature Engineering como las siguientes:
 
 - **Definición de Variable Objetivo:** Se unificaron y simplificaron múltiples motivos de pérdida operativa (cancelaciones, fraudes o fallos logísticos) en una única variable objetivo binaria.
-- **Estrategia para Datos Desbalanceados:** Dado que las transacciones fallidas representan una minoría estadística crítica (8% del histórico), se aplicaron técnicas de balanceo de clases para evitar el sesgo hacia la clase mayoritaria.
-- **Numerización Dummy y Escalado de Variables:** Se implementaron pipelines de codificación para las variables categóricas y técnicas de escalado numérico en las variables independientes evitando un sesgo de influencia.
+- **Estrategia para Datos Desbalanceados:** Dado que las transacciones fallidas representan una minoría estadística crítica (9% del histórico), se aplicaron técnicas de balanceo de clases para evitar el sesgo hacia la clase mayoritaria.
+- **Numerización y Estandarización de Variables:** Se implementaron pipelines de codificación Target para las variables categóricas y estandarización sin valores Outliers para las continuas evitando un sesgo de influencia.
 
 
 
