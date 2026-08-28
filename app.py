@@ -76,7 +76,7 @@ bagging_knn = BaggingClassifier(
 bagging_knn.fit(X_train_processed_balanced, y_train_balanced)
 
 pca = PCA(n_components=2, random_state=42)
-pca_results = pca.fit_transform(X_train_processed)
+pca_results = pca.fit_transform(X_train_processed[numeric_vars] = X_train[numeric_vars])
 
 df_pca = pd.DataFrame(pca_results, columns=["PC1", "PC2"])
 df_pca["Order Success"] = y_train.values
@@ -88,7 +88,7 @@ prc = df["Order Success"].value_counts(normalize=True)
 success_prc = round(prc.get(1, 0) * 100, 1)
 fails_prc = round(prc.get(0, 0) * 100, 1)
 
-probability_text = html.B(id="probability",children=[],style={})
+probability_text = html.B(id="probability", children=[], style={})
 
 fig_pca = go.Figure()
 fig_pca.add_trace(go.Scatter(x=success["PC1"], y=success["PC2"], mode="markers", marker_color="green", name=f"Completadas ({success_prc}%)"))
