@@ -10,7 +10,7 @@ Se diseñó un modelo de scoring transaccional enfocado en la detección precisa
 
 - **Definición de Variable Objetivo:** Se unificaron y simplificaron múltiples motivos de pérdida operativa (cancelaciones, fraudes o fallos logísticos) en una única variable objetivo binaria.
 - **Estrategia para Datos Desbalanceados:** Dado que las transacciones fallidas representan una minoría estadística crítica (9% del histórico), se aplicaron técnicas de balanceo de clases para evitar el sesgo hacia la clase mayoritaria.
-- **Numerización y Estandarización de Variables:** Se implementaron pipelines de codificación Target para las variables categóricas y estandarización sin valores Outliers para las continuas evitando un sesgo de influencia.
+- **Numerización y Estandarización de Variables:** Se implementaron pipelines de codificación Target para las variables categóricas y estandarización sin valores outliers para las continuas evitando un sesgo de influencia.
 
 
 
