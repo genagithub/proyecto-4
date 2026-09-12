@@ -177,8 +177,8 @@ def get_risk_prob(n_clicks, var_1, var_2, var_3, var_4, var_5, var_6, var_7, tab
 
         obj_num_scaled = scaler.transform(new_object[numeric_vars])
         obj_cat_encoded = encoder.transform(new_object[categorical_vars])
-
         object_processed = np.hstack((obj_cat_encoded, obj_num_scaled))
+        obj_pca = pca.transform(object_processed)
 
         prob_fail = bagging_knn.predict_proba(object_processed)[0,0] * 100 
         prob_fail_text = f"{prob_fail:.2f}%"
@@ -200,12 +200,8 @@ def get_risk_prob(n_clicks, var_1, var_2, var_3, var_4, var_5, var_6, var_7, tab
             lightness = int(35 - (factor * 20))
             color_res = f"hsl(0, 100%, {lightness}%)"
 
-        style_res = {"color":color_res}
-
-        obj_pca = pca.transform(object_processed)
-      
+        style_res = {"color":color_res}      
         id_new_operation += 1
-        probs_fail.append(prob_fail)
       
         fig_update.add_trace(go.Scatter(
             x=[obj_pca[0, 0]],
