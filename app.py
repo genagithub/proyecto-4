@@ -106,9 +106,10 @@ server = app.server
 app.layout =  html.Div(id="body",className="e4_body",children=[
     html.A(href="https://github.com/genagithub/proyecto-4/blob/main/README.md",children=[html.H1("Evaluación de riesgo en planificaciones comerciales",id="title",className="e4_title")]),
     html.Div(id="dashboard", className="e4_dashboard", children=[
-        html.Div(id="graph_div", className="e4_graph_div",children=[
+        html.Div(id="graph_div", className="e4_graph_div", children=[
             dcc.Graph(id="graph_pca", className="e4_graph", figure=fig_pca),
-            dash_table.DataTable(id="table",
+            html.Div(id="table_div", className="e4_graph", children=[
+                dash_table.DataTable(id="table",
                       columns=[
                           {"name": "Días de envío (programado)", "id": "Days for shipment (scheduled)"},
                           {"name": "Mercado", "id": "Market"},
@@ -121,7 +122,7 @@ app.layout =  html.Div(id="body",className="e4_body",children=[
                       ],
                       data=[], 
                       style_cell={"textAlign":"left","padding":"8px","fontFamily":"Arial"}, 
-                      style_header={"backgroundColor":"#f4f4f4","fontWeight":"bold"})
+                      style_header={"backgroundColor":"#f4f4f4","fontWeight":"bold"})])
         ]),
         html.Div(id="input_div", style={"display":"flex","flexWrap":"wrap","gap":"10px"}, children=[
             dcc.Input(id="input_1", type="number", placeholder="Días envío", style={"width":"75px"}),
