@@ -108,7 +108,7 @@ app.layout =  html.Div(id="body",className="e4_body",children=[
     html.Div(id="dashboard", className="e4_dashboard", children=[
         html.Div(id="graph_div", className="e4_graph_div",children=[
             dcc.Graph(id="graph_pca", className="e4_graph", figure=fig_pca),
-            dash_table.DataTable(id="table", className="e4_graph",
+            dash_table.DataTable(id="table", className="e4_graph", style={"width":"30%"},
                       columns=[
                           {"name": "Días de envío (programado)", "id": "Days for shipment (scheduled)"},
                           {"name": "Mercado", "id": "Market"},
