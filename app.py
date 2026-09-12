@@ -2,7 +2,7 @@ import pandas as pd
 import numpy as np
 import plotly.graph_objects as go
 import dash
-from dash import html, dcc
+from dash import html, dcc, dash_table
 from dash.dependencies import Output, Input, State
 from sklearn.model_selection import train_test_split
 from category_encoders import TargetEncoder
@@ -96,8 +96,9 @@ probability_text = html.B(id="probability", children=[], style={})
 fig_pca = go.Figure()
 fig_pca.add_trace(go.Scatter(x=success["PC1"], y=success["PC2"], mode="markers", marker_color="green", name=f"Completadas ({success_prc}%)"))
 fig_pca.add_trace(go.Scatter(x=fails["PC1"], y=fails["PC2"], mode="markers", marker_color="red", name=f"Sin Éxito ({fails_prc}%)"))
-fig_pca.update_layout(title="Resultados de Órdenes Históricas")
+fig_pca.update_layout(title="Resultados de Operaciones Históricas")
 fig_pca.update_layout(legend=dict(font=dict(size=9)))
+id_new_operation = 0
 
 app = dash.Dash(__name__)
 server = app.server
@@ -105,20 +106,34 @@ server = app.server
 app.layout =  html.Div(id="body",className="e4_body",children=[
     html.A(href="https://github.com/genagithub/proyecto-4/blob/main/README.md",children=[html.H1("Evaluación de riesgo en planificaciones comerciales",id="title",className="e4_title")]),
     html.Div(id="dashboard", className="e4_dashboard", children=[
-        html.Div(className="e4_graph_div",children=[
-            dcc.Graph(id="graph_pca",className="e4_graph",figure=fig_pca),
-            html.Div(id="input_div", style={"display":"flex","flexWrap":"wrap","gap":"10px"}, children=[
-                dcc.Input(id="input_1", type="number", placeholder="Días envío", style={"width":"75px"}),
-                dcc.Input(id="input_5", type="number", placeholder="Precio Producto", style={"width":"75px"}),
-                dcc.Input(id="input_6", type="number", placeholder="Ratio Descuento", style={"width":"75px"}),
-                dcc.Dropdown(id="input_2", options=[{"label": i, "value": i} for i in df_original["Market"].dropna().unique()], placeholder="Mercado", style={"width":"150px"}),
-                dcc.Dropdown(id="input_3", options=[{"label": i, "value": i} for i in df_original["Order Region"].dropna().unique()], placeholder="Región", style={"width":"150px"}),
-                dcc.Dropdown(id="input_4", options=[{"label": i, "value": i} for i in df_original["Category Name"].dropna().unique()], placeholder="Categoría", style={"width":"150px"}),
-                dcc.Dropdown(id="input_7", options=[{"label": i, "value": i} for i in df_original["Shipping Mode"].dropna().unique()], placeholder="Tipo Envío", style={"width":"150px"}),
-                html.Button(id="button", className="e4_button", children="Enviar", n_clicks=0)
-            ]),
-            html.P(["predicción: riesgo de fracaso del ",probability_text],className="e4_predict")
-        ])
+        html.Div(id="graph_div", className="e4_graph_div",children=[
+            dcc.Graph(id="graph_pca", className="e4_graph", figure=fig_pca),
+            dash_table.DataTable(id="table",
+                      columns=[
+                          {"name": "Días de envío (programado)", "id": "Days for shipment (scheduled)"},
+                          {"name": "Mercado", "id": "Market"},
+                          {"name": "Región", "id": "Order Region"},
+                          {"name": "Categoría", "id": "Category Name"},
+                          {"name": "Precio del producto", "id": "Product Price"},
+                          {"name": "Tasa de descuento", "id": "Discount Ratio"},
+                          {"name": "Tipo de envío", "id": "Shipping Mode"},
+                          {"name": "Riesgo de fracaso", "id": "Fail Risk"} 
+                      ],
+                      data=[], 
+                      style_cell={"textAlign":"left","padding":"8px","fontFamily":"Arial"}, 
+                      style_header={"backgroundColor":"#f4f4f4","fontWeight":"bold"})
+        ]),
+        html.Div(id="input_div", style={"display":"flex","flexWrap":"wrap","gap":"10px"}, children=[
+            dcc.Input(id="input_1", type="number", placeholder="Días envío", style={"width":"75px"}),
+            dcc.Input(id="input_5", type="number", placeholder="Precio Producto", style={"width":"75px"}),
+            dcc.Input(id="input_6", type="number", placeholder="Ratio Descuento", style={"width":"75px"}),
+            dcc.Dropdown(id="input_2", options=[{"label": i, "value": i} for i in df_original["Market"].dropna().unique()], placeholder="Mercado", style={"width":"150px"}),
+            dcc.Dropdown(id="input_3", options=[{"label": i, "value": i} for i in df_original["Order Region"].dropna().unique()], placeholder="Región", style={"width":"150px"}),
+            dcc.Dropdown(id="input_4", options=[{"label": i, "value": i} for i in df_original["Category Name"].dropna().unique()], placeholder="Categoría", style={"width":"150px"}),
+            dcc.Dropdown(id="input_7", options=[{"label": i, "value": i} for i in df_original["Shipping Mode"].dropna().unique()], placeholder="Tipo Envío", style={"width":"150px"}),
+            html.Button(id="button", className="e4_button", children="Enviar", n_clicks=0)
+        ]),
+        html.P(["predicción: riesgo de fracaso del ",probability_text],className="e4_predict")
     ])
 ])
 
@@ -126,7 +141,8 @@ app.layout =  html.Div(id="body",className="e4_body",children=[
 @app.callback(
     [Output(component_id="graph_pca",component_property="figure"),
     Output(component_id="probability",component_property="children"),
-    Output(component_id="probability",component_property="style")],
+    Output(component_id="probability",component_property="style"),
+    Output(component_id="table", component_property="data")],
     [Input(component_id="button",component_property="n_clicks")],
     [State(component_id="input_1",component_property="value"),
     State(component_id="input_2",component_property="value"),
@@ -134,10 +150,11 @@ app.layout =  html.Div(id="body",className="e4_body",children=[
     State(component_id="input_4",component_property="value"),
     State(component_id="input_5",component_property="value"),
     State(component_id="input_6",component_property="value"),
-    State(component_id="input_7",component_property="value")]
+    State(component_id="input_7",component_property="value"),
+    State(component_id="table", component_property="data")]
 )
 
-def get_risk_prob(n_clicks, var_1, var_2, var_3, var_4, var_5, var_6, var_7):
+def get_risk_prob(n_clicks, var_1, var_2, var_3, var_4, var_5, var_6, var_7, table_data):
   
     fig_update = go.Figure(fig_pca)
     prob_fail_text = "0.00%"
@@ -183,16 +200,32 @@ def get_risk_prob(n_clicks, var_1, var_2, var_3, var_4, var_5, var_6, var_7):
         style_res = {"color":color_res}
 
         obj_pca = pca.transform(object_processed)
-
+      
+        id_new_operation += 1
+        probs_fail.append(prob_fail)
+      
         fig_update.add_trace(go.Scatter(
             x=[obj_pca[0, 0]],
             y=[obj_pca[0, 1]],
             mode="markers",
             marker=dict(color="blueviolet", size=12, symbol="star"),
-            name="Nueva Órden"
+            name=f"Nueva Operación {id_new_operation}"
         ))
+              
+        new_row = {
+            "Días de envío (programado)": var_1,
+            "Mercado": var_2,
+            "Región": var_3,
+            "Categoría": var_4,
+            "Precio del producto": var_5, 
+            "Ratio de descuento": var_6,
+            "Tipo de envío": var_7,
+            "Riesgo de fracaso": prob_fail_text
+        }
+        
+        table_data.append(new_row)
 
-    return fig_pca, prob_fail_text, style_res
+    return fig_pca, prob_fail_text, style_res, table_data
 
 
 if __name__ == "__main__":
