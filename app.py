@@ -204,8 +204,8 @@ def get_risk_prob(n_clicks, var_1, var_2, var_3, var_4, var_5, var_6, var_7, tab
         id_new_operation += 1
       
         fig_update.add_trace(go.Scatter(
-            x=[obj_pca[0, 0]],
-            y=[obj_pca[0, 1]],
+            x=obj_pca[0, 0],
+            y=obj_pca[0, 1],
             mode="markers",
             marker=dict(color="blueviolet", size=12, symbol="star"),
             name=f"Nueva Operación {id_new_operation}"
