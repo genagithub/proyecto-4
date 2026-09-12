@@ -98,7 +98,6 @@ fig_pca.add_trace(go.Scatter(x=success["PC1"], y=success["PC2"], mode="markers",
 fig_pca.add_trace(go.Scatter(x=fails["PC1"], y=fails["PC2"], mode="markers", marker_color="red", name=f"Sin Éxito ({fails_prc}%)"))
 fig_pca.update_layout(title="Resultados de Operaciones Históricas")
 fig_pca.update_layout(legend=dict(font=dict(size=9)))
-id_new_operation = 0
 
 app = dash.Dash(__name__)
 server = app.server
@@ -201,14 +200,13 @@ def get_risk_prob(n_clicks, var_1, var_2, var_3, var_4, var_5, var_6, var_7, tab
             color_res = f"hsl(0, 100%, {lightness}%)"
 
         style_res = {"color":color_res}      
-        id_new_operation += 1
       
         fig_update.add_trace(go.Scatter(
-            x=obj_pca[0, 0],
-            y=obj_pca[0, 1],
+            x=[obj_pca[0, 0]],
+            y=[obj_pca[0, 1]],
             mode="markers",
             marker=dict(color="blueviolet", size=12, symbol="star"),
-            name=f"Nueva Operación {id_new_operation}"
+            name=f"Nueva Operación {n_clicks}"
         ))
               
         new_row = {
