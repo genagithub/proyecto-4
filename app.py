@@ -121,7 +121,7 @@ app.layout =  html.Div(id="body",className="e4_body",children=[
                       ],
                       data=[], 
                       fill_width=True,
-                      style_table={"width":"100%","minWidth":"100%"},
+                      style_table={"width":"100%","minWidth":"100%","maxHeight":"100%"},
                       style_cell={"textAlign":"left","padding":"5px","fontFamily":"Arial","fontSize":"12px","whiteSpace":"normal","height":"auto"}, 
                       style_header={"backgroundColor":"#f4f4f4","fontWeight":"bold"})])
         ]),
