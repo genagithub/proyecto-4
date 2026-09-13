@@ -129,10 +129,10 @@ app.layout =  html.Div(id="body",className="e4_body",children=[
             dcc.Input(id="input_1", type="number", placeholder="Días envío", style={"width":"75px"}),
             dcc.Input(id="input_5", type="number", placeholder="Precio Producto", style={"width":"75px"}),
             dcc.Input(id="input_6", type="number", placeholder="Ratio Descuento", style={"width":"75px"}),
-            dcc.Dropdown(id="input_2", options=[{"label": i, "value": i} for i in df_original["Market"].dropna().unique()], placeholder="Mercado", style={"width":"150px"}),
-            dcc.Dropdown(id="input_3", options=[{"label": i, "value": i} for i in df_original["Order Region"].dropna().unique()], placeholder="Región", style={"width":"150px"}),
-            dcc.Dropdown(id="input_4", options=[{"label": i, "value": i} for i in X_train["Category Name"].dropna().unique()], placeholder="Categoría", style={"width":"150px"}),
-            dcc.Dropdown(id="input_7", options=[{"label": i, "value": i} for i in df_original["Shipping Mode"].dropna().unique()], placeholder="Tipo Envío", style={"width":"150px"}),
+            dcc.Dropdown(id="input_2", options=[{"label": i, "value": i} for i in df["Market"].unique()], placeholder="Mercado", style={"width":"150px"}),
+            dcc.Dropdown(id="input_3", options=[{"label": i, "value": i} for i in df["Order Region"].unique()], placeholder="Región", style={"width":"150px"}),
+            dcc.Dropdown(id="input_4", options=[{"label": i, "value": i} for i in X_train["Category Name"].unique()], placeholder="Categoría", style={"width":"150px"}),
+            dcc.Dropdown(id="input_7", options=[{"label": i, "value": i} for i in df["Shipping Mode"].unique()], placeholder="Tipo Envío", style={"width":"150px"}),
             html.Button(id="button", className="e4_button", children="Enviar", n_clicks=0)
         ]),
         html.P(["predicción: riesgo de fracaso del ",probability_text],className="e4_predict")
