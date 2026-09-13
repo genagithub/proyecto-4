@@ -49,7 +49,6 @@ categories_distribution = X_train["Category Name"].value_counts(normalize=True)
 valid_categories = categories_distribution[categories_distribution > umbral].index
 
 X_train["Category Name"] = X_train["Category Name"].where(X_train["Category Name"].isin(valid_categories), "OTHERS")
-categories_input = X_train["Category Name"]
 X_test["Category Name"] = X_test["Category Name"].where(X_test["Category Name"].isin(valid_categories), "OTHERS")
 
 scaler = StandardScaler()
@@ -132,7 +131,7 @@ app.layout =  html.Div(id="body",className="e4_body",children=[
             dcc.Input(id="input_6", type="number", placeholder="Ratio Descuento", style={"width":"75px"}),
             dcc.Dropdown(id="input_2", options=[{"label": i, "value": i} for i in df_original["Market"].dropna().unique()], placeholder="Mercado", style={"width":"150px"}),
             dcc.Dropdown(id="input_3", options=[{"label": i, "value": i} for i in df_original["Order Region"].dropna().unique()], placeholder="Región", style={"width":"150px"}),
-            dcc.Dropdown(id="input_4", options=[{"label": i, "value": i} for i in categories_input.dropna().unique()], placeholder="Categoría", style={"width":"150px"}),
+            dcc.Dropdown(id="input_4", options=[{"label": i, "value": i} for i in X_train["Category Name"].dropna().unique()], placeholder="Categoría", style={"width":"150px"}),
             dcc.Dropdown(id="input_7", options=[{"label": i, "value": i} for i in df_original["Shipping Mode"].dropna().unique()], placeholder="Tipo Envío", style={"width":"150px"}),
             html.Button(id="button", className="e4_button", children="Enviar", n_clicks=0)
         ]),
