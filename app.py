@@ -202,27 +202,27 @@ def get_risk_prob(n_clicks, var_1, var_2, var_3, var_4, var_5, var_6, var_7, tab
         style_res = {"color":color_res}      
       
         fig_update.add_trace(go.Scatter(
-            x=obj_pca[0, 0],
-            y=obj_pca[0, 1],
+            x=[obj_pca[0, 0]],
+            y=[obj_pca[0, 1]],
             mode="markers",
             marker=dict(color="blueviolet", size=12, symbol="star"),
             name=f"Nueva Operación {n_clicks}"
         ))
               
         new_row = {
-            "Días de envío (programado)": var_1,
-            "Mercado": var_2,
-            "Región": var_3,
-            "Categoría": var_4,
-            "Precio del producto": var_5, 
-            "Ratio de descuento": var_6,
-            "Tipo de envío": var_7,
-            "Riesgo de fracaso": prob_fail_text
+            "Days for shipment (scheduled)": [float(var_1)],
+            "Market": var_2,
+            "Order Region": var_3,
+            "Category Name": var_4,
+            "Product Price": var_5,
+            "Discount Ratio":var_6,
+            "Shipping Mode": var_7,
+            "Fail Risk": prob_fail_text
         }
         
         table_data.append(new_row)
 
-    return fig_pca, prob_fail_text, style_res, table_data
+    return fig_update, prob_fail_text, style_res, table_data
 
 
 if __name__ == "__main__":
