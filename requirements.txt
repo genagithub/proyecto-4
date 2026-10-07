@@ -7,4 +7,5 @@ dash==2.16.1
 imbalanced-learn==0.12.3
 category_encoders
 scikit-learn==1.5.1
+joblib
 gunicorn==23.0.0
