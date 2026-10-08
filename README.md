@@ -1,6 +1,6 @@
 ### ⚠️ Evaluación de Riesgo de Fracaso en Planificaciones Comerciales
 
-#### 🎯 El Contexto del Problema 
+#### 🎯 Contexto del Problema de Negocio 
 La empresa proyecta sus ventas futuras en múltiples canales comerciales sin saber con certeza la probabilidad real de concreción y los riesgos asociados a cada nuevo contrato, al operar bajo un baseline reactivo y conservador debido a que las pérdidas transaccionales y los fallos logísticos representan una pequeña proporción del total de las ventas, la gestión interna los asume como eventos poco probables, fortuitos o inherentemente difíciles de anticipar. El equipo técnico seleccionó estrategicamente las variables requeridas del conjunto, por lo que el objetivo es transformar la previsión comercial tradicional en una herramienta prescriptiva capaz de anticipar riesgos operativos y asegurar la viabilidad de la ejecución antes de la conclusión transaccional.
 
 ---
@@ -12,8 +12,6 @@ Se diseñó un modelo de scoring transaccional enfocado en la detección precisa
 - **Estrategia para Datos Desbalanceados:** Dado que las transacciones fallidas representan una minoría estadística crítica (9% del histórico), se aplicaron técnicas de balanceo de clases para evitar el sesgo hacia la clase mayoritaria.
 - **Numerización y Estandarización de Variables:** Se implementaron pipelines de codificación Target para las variables categóricas y estandarización sin valores outliers para las continuas evitando un sesgo de influencia.
 
-
-
 ---
 
 #### 🚀 Solución Analítica: Simulador Operativo de Ventas
@@ -24,6 +22,6 @@ El resultado final es una herramienta interactiva basada en un asistente intelig
 
 ---
 
-#### 📌 Propósito de este Proyecto: Impacto Directo
+#### 📌 Propósito: Impacto Directo
 
 - **Mitigación Preventiva:** Dota al equipo de ventas y operaciones la ventaja competitiva de anticipar la viabilidad real de los nuevos contratos antes de su ejecución y transformar la incertidumbre de las ventas en previsibilidad operativa.
