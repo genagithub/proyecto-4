@@ -38,7 +38,7 @@ df, caps = caps_outliers(df, ["Product Price", "Discount Ratio"])
 
 numeric_var_limited = ["Discount Ratio"]
 categorical_vars = ["Category Name", "Order Region", "Shipping Mode"]
-numeric_vars = ["Days for shipment (scheduled)", "Product Price", "Discount Ratio"]
+numeric_vars = ["Days for shipment (scheduled)", "Product Price"]
 
 X_train, y_train = df[categorical_vars + numeric_vars + numeric_var_limited], df["Order Success"]
 
@@ -57,7 +57,7 @@ X_train_cat = encoder.fit_transform(X_train[categorical_vars], y_train)
 X_train_processed = pd.concat([X_train_cat, X_train_num], axis=1)
 X_train_processed[numeric_var_limited[0]] = X_train[numeric_var_limited[0]]
 
-smote = SMOTE(sampling_strategy=0.25, random_state=42)
+smote = SMOTE(sampling_strategy=0.2, random_state=42)
 X_train_processed_balanced, y_train_balanced = smote.fit_resample(X_train_processed, y_train)
 
 knn_classifier = KNeighborsClassifier(n_neighbors=5)
@@ -73,7 +73,7 @@ bagging_knn = BaggingClassifier(
 bagging_knn.fit(X_train_processed_balanced, y_train_balanced)
 
 X_train_pca = X_train_processed.copy()
-X_train_pca[numeric_vars] = X_train[numeric_vars]
+X_train_pca = X_train_processed[numeric_vars + numeric_var_limited]
 
 pca = PCA(n_components=2, random_state=42)
 pca_results = pca.fit_transform(X_train_pca)
@@ -172,7 +172,9 @@ def get_risk_prob(n_clicks, var_1, var_2, var_3, var_4, var_5, var_6, table_data
         obj_num_scaled = scaler.transform(new_object[numeric_vars])
         obj_cat_encoded = encoder.transform(new_object[categorical_vars])
         object_processed = np.hstack((obj_cat_encoded, obj_num_scaled, new_numeric_var_limited))
-        obj_pca = pca.transform(new_object[numeric_vars])
+
+        obj_num_scaled = np.hstack((obj_num_scaled, new_numeric_var_limited))
+        obj_pca = pca.transform(obj_num_scaled)
 
         prob_fail = bagging_knn.predict_proba(object_processed)[0,0] * 100 
         prob_fail_text = f"{prob_fail:.2f}%"
