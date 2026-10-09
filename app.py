@@ -25,18 +25,23 @@ df = df_original.copy()
 df.drop(columns=["Order Status","Order Item Discount"], inplace=True)
 df = df.reset_index(drop=True)
 
-Q1_discount_radio = df["Discount Ratio"].quantile(0.25)
-Q3_discount_radio = df["Discount Ratio"].quantile(0.75)
-IQR_discount_radio = Q3_discount_radio - Q1_discount_radio
-df = df.loc[~((df["Discount Ratio"] < (Q1_discount_radio - 1.5 * IQR_discount_radio)) | (df["Discount Ratio"] > (Q3_discount_radio + 1.5 * IQR_discount_radio))),:]
-
-Q1_product_price = df["Product Price"].quantile(0.25)
-Q3_product_price = df["Product Price"].quantile(0.75)
-IQR_product_price = Q3_product_price - Q1_product_price
-df = df.loc[~((df["Product Price"] < (Q1_product_price - 1.5 * IQR_product_price)) | (df["Product Price"] > (Q3_product_price + 1.5 * IQR_product_price))),:]
-
 categorical_vars = ["Category Name", "Order Region", "Shipping Mode"]
 numeric_vars = ["Days for shipment (scheduled)", "Product Price", "Discount Ratio"]
+
+def cap_outliers(s, p_low=0.01, p_high=0.99):
+    low = s.quantile(p_low)
+    high = s.quantile(p_high)
+    return s.clip(lower=low, upper=high), low, high
+
+caps = {} 
+for col in numeric_vars:
+    df[col], low, high = cap_outliers(df[col])
+    caps[col] = (low, high)
+
+def aplicate_caps(df_new, caps_dict):
+    for col, (low, high) in caps_dict.items():
+    df_new[col] = df_new[col].clip(lower=low, upper=high)
+    return df_new
 
 X_train, X_test, y_train, y_test = train_test_split(df[categorical_vars + numeric_vars],
                                                     df["Order Success"],
@@ -169,6 +174,8 @@ def get_risk_prob(n_clicks, var_1, var_2, var_3, var_4, var_5, var_6, table_data
             "Discount Ratio": [float(var_5)],
             "Shipping Mode": [str(var_6)]
         })
+
+        new_object = aplicate_caps(new_object, caps)
 
         obj_num_scaled = scaler.transform(new_object[numeric_vars])
         obj_cat_encoded = encoder.transform(new_object[categorical_vars])
