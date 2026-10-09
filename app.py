@@ -18,15 +18,13 @@ df_original = pd.read_csv("data/commercial_planning.csv", encoding="latin-1")
 final_states = ["CLOSED", "COMPLETE", "CANCELED", "SUSPECTED_FRAUD"]
 df_original = df_original[df_original["Order Status"].isin(final_states)]
 df_original["Order Success"] = df_original["Order Status"].isin(["COMPLETE", "CLOSED"]).astype(int)
-
 df_original["Discount Ratio"] = df_original["Order Item Discount"] / df_original["Product Price"]
 
 df = df_original.copy()
-df.drop(columns=["Order Status","Order Item Discount"], inplace=True)
-df = df.reset_index(drop=True)
 
-categorical_vars = ["Category Name", "Order Region", "Shipping Mode"]
-numeric_vars = ["Days for shipment (scheduled)", "Product Price", "Discount Ratio"]
+df.drop(columns=["Order Status","Order Item Discount"], inplace=True)
+df = df[df["Discount Ratio"] <= 1]
+df = df.reset_index(drop=True)
 
 def caps_outliers(df, columns):
     caps_high = {}
@@ -36,7 +34,10 @@ def caps_outliers(df, columns):
        caps[col] = P99
     return df, caps_high
 
-df, caps = caps_outliers(df, numeric_vars[-2,-1])
+df, caps = caps_outliers(df, ["Product Price", "Discount Ratio"])
+
+categorical_vars = ["Category Name", "Order Region", "Shipping Mode"]
+numeric_vars = ["Days for shipment (scheduled)", "Product Price", "Discount Ratio"]
 
 X_train, X_test, y_train, y_test = train_test_split(df[categorical_vars + numeric_vars],
                                                     df["Order Success"],
@@ -169,9 +170,6 @@ def get_risk_prob(n_clicks, var_1, var_2, var_3, var_4, var_5, var_6, table_data
             "Discount Ratio": [float(var_5)],
             "Shipping Mode": [str(var_6)]
         })
-
-        for col in numeric_vars[-2,-1]:
-            new_object[col] = new_object[col].clip(upper=caps[col])
 
         obj_num_scaled = scaler.transform(new_object[numeric_vars])
         obj_cat_encoded = encoder.transform(new_object[categorical_vars])
