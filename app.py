@@ -29,9 +29,9 @@ df = df.reset_index(drop=True)
 def caps_outliers(df, columns):
     caps_high = {}
     for col in columns:
-       P99 = df[col].quantile(0.99)
-       df[col] = df[col].clip(upper=P99)
-       caps[col] = P99
+        P99 = df[col].quantile(0.99)
+        df[col] = df[col].clip(upper=P99)
+        caps[col] = P99
     return df, caps_high
 
 df, caps = caps_outliers(df, ["Product Price", "Discount Ratio"])
