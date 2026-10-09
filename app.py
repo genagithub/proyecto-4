@@ -28,20 +28,15 @@ df = df.reset_index(drop=True)
 categorical_vars = ["Category Name", "Order Region", "Shipping Mode"]
 numeric_vars = ["Days for shipment (scheduled)", "Product Price", "Discount Ratio"]
 
-def cap_outliers(s, p_low=0.01, p_high=0.99):
-    low = s.quantile(p_low)
-    high = s.quantile(p_high)
-    return s.clip(lower=low, upper=high), low, high
+def caps_outliers(df, columns):
+    caps_high = {}
+    for col in columns:
+       P99 = df[col].quantile(0.99)
+       df[col] = df[col].clip(upper=P99)
+       caps[col] = P99
+    return df, caps_high
 
-caps = {} 
-for col in numeric_vars:
-    df[col], low, high = cap_outliers(df[col])
-    caps[col] = (low, high)
-
-def aplicate_caps(df_new, caps_dict):
-    for col, (low, high) in caps_dict.items():
-    df_new[col] = df_new[col].clip(lower=low, upper=high)
-    return df_new
+df, caps = caps_outliers(df, numeric_vars[-2,-1])
 
 X_train, X_test, y_train, y_test = train_test_split(df[categorical_vars + numeric_vars],
                                                     df["Order Success"],
@@ -175,7 +170,8 @@ def get_risk_prob(n_clicks, var_1, var_2, var_3, var_4, var_5, var_6, table_data
             "Shipping Mode": [str(var_6)]
         })
 
-        new_object = aplicate_caps(new_object, caps)
+        for col in numeric_vars[-2,-1]:
+            new_object[col] = new_object[col].clip(upper=caps[col])
 
         obj_num_scaled = scaler.transform(new_object[numeric_vars])
         obj_cat_encoded = encoder.transform(new_object[categorical_vars])
