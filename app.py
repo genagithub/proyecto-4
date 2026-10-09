@@ -35,7 +35,7 @@ Q3_product_price = df["Product Price"].quantile(0.75)
 IQR_product_price = Q3_product_price - Q1_product_price
 df = df.loc[~((df["Product Price"] < (Q1_product_price - 1.5 * IQR_product_price)) | (df["Product Price"] > (Q3_product_price + 1.5 * IQR_product_price))),:]
 
-categorical_vars = ["Category Name", "Market", "Order Region", "Shipping Mode"]
+categorical_vars = ["Category Name", "Order Region", "Shipping Mode"]
 numeric_vars = ["Days for shipment (scheduled)", "Product Price", "Discount Ratio"]
 
 X_train, X_test, y_train, y_test = train_test_split(df[categorical_vars + numeric_vars],
@@ -111,7 +111,6 @@ app.layout =  html.Div(id="body",className="e4_body",children=[
                 dash_table.DataTable(id="table",
                       columns=[
                           {"name": "Días de envío (programado)", "id": "Days for shipment (scheduled)"},
-                          {"name": "Mercado", "id": "Market"},
                           {"name": "Región", "id": "Order Region"},
                           {"name": "Categoría", "id": "Category Name"},
                           {"name": "Precio del producto", "id": "Product Price"},
@@ -127,12 +126,11 @@ app.layout =  html.Div(id="body",className="e4_body",children=[
         ]),
         html.Div(id="input_div", style={"display":"flex","flexWrap":"wrap","gap":"10px"}, children=[
             dcc.Input(id="input_1", type="number", placeholder="Días envío", style={"width":"75px"}),
-            dcc.Input(id="input_5", type="number", placeholder="Precio Producto", style={"width":"75px"}),
-            dcc.Input(id="input_6", type="number", placeholder="Ratio Descuento", style={"width":"75px"}),
-            dcc.Dropdown(id="input_2", options=[{"label": i, "value": i} for i in df["Market"].unique()], placeholder="Mercado", style={"width":"150px"}),
-            dcc.Dropdown(id="input_3", options=[{"label": i, "value": i} for i in df["Order Region"].unique()], placeholder="Región", style={"width":"150px"}),
-            dcc.Dropdown(id="input_4", options=[{"label": i, "value": i} for i in X_train["Category Name"].unique()], placeholder="Categoría", style={"width":"150px"}),
-            dcc.Dropdown(id="input_7", options=[{"label": i, "value": i} for i in df["Shipping Mode"].unique()], placeholder="Tipo Envío", style={"width":"150px"}),
+            dcc.Input(id="input_4", type="number", placeholder="Precio Producto", style={"width":"75px"}),
+            dcc.Input(id="input_5", type="number", placeholder="Ratio Descuento", style={"width":"75px"}),
+            dcc.Dropdown(id="input_2", options=[{"label": i, "value": i} for i in df["Order Region"].unique()], placeholder="Región", style={"width":"150px"}),
+            dcc.Dropdown(id="input_3", options=[{"label": i, "value": i} for i in X_train["Category Name"].unique()], placeholder="Categoría", style={"width":"150px"}),
+            dcc.Dropdown(id="input_6", options=[{"label": i, "value": i} for i in df["Shipping Mode"].unique()], placeholder="Tipo Envío", style={"width":"150px"}),
             html.Button(id="button", className="e4_button", children="Enviar", n_clicks=0)
         ]),
         html.P(["predicción: riesgo de fracaso del ",probability_text],className="e4_predict")
@@ -152,26 +150,24 @@ app.layout =  html.Div(id="body",className="e4_body",children=[
     State(component_id="input_4",component_property="value"),
     State(component_id="input_5",component_property="value"),
     State(component_id="input_6",component_property="value"),
-    State(component_id="input_7",component_property="value"),
     State(component_id="table", component_property="data")]
 )
 
-def get_risk_prob(n_clicks, var_1, var_2, var_3, var_4, var_5, var_6, var_7, table_data):
+def get_risk_prob(n_clicks, var_1, var_2, var_3, var_4, var_5, var_6, table_data):
   
     fig_update = go.Figure(fig_pca)
     prob_fail_text = "0.00%"
     style_res = {"color": "black"}
 
-    inputs = [var_1, var_2, var_3, var_4, var_5, var_6, var_7]
+    inputs = [var_1, var_2, var_3, var_4, var_5, var_6]
     if n_clicks > 0 and all(v is not None for v in inputs):
         new_object = pd.DataFrame({
             "Days for shipment (scheduled)": [float(var_1)],
-            "Market": [str(var_2)],
-            "Order Region": [str(var_3)],
-            "Category Name": [str(var_4)],
-            "Product Price": [float(var_5)],
-            "Discount Ratio": [float(var_6)],
-            "Shipping Mode": [str(var_7)]
+            "Order Region": [str(var_2)],
+            "Category Name": [str(var_3)],
+            "Product Price": [float(var_4)],
+            "Discount Ratio": [float(var_5)],
+            "Shipping Mode": [str(var_6)]
         })
 
         obj_num_scaled = scaler.transform(new_object[numeric_vars])
@@ -211,12 +207,11 @@ def get_risk_prob(n_clicks, var_1, var_2, var_3, var_4, var_5, var_6, var_7, tab
               
         new_row = {
             "Days for shipment (scheduled)": [float(var_1)],
-            "Market": var_2,
-            "Order Region": var_3,
-            "Category Name": var_4,
-            "Product Price": var_5,
-            "Discount Ratio":var_6,
-            "Shipping Mode": var_7,
+            "Order Region": var_2,
+            "Category Name": var_3,
+            "Product Price": var_4,
+            "Discount Ratio":var_5,
+            "Shipping Mode": var_6,
             "Fail Risk": prob_fail_text
         }
         
