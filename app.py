@@ -36,21 +36,16 @@ def caps_outliers(df, columns):
 
 df, caps = caps_outliers(df, ["Product Price", "Discount Ratio"])
 
+numeric_var_limited = ["Discount Ratio"]
 categorical_vars = ["Category Name", "Order Region", "Shipping Mode"]
 numeric_vars = ["Days for shipment (scheduled)", "Product Price", "Discount Ratio"]
 
-X_train, X_test, y_train, y_test = train_test_split(df[categorical_vars + numeric_vars],
-                                                    df["Order Success"],
-                                                    test_size=0.2,
-                                                    random_state=42,
-                                                    stratify=df["Order Success"])
+X_train, y_train = df[categorical_vars + numeric_vars + numeric_var_limited], df["Order Success"]
 
-umbral = 0.01
+umbral = 0.025
 categories_distribution = X_train["Category Name"].value_counts(normalize=True)
 valid_categories = categories_distribution[categories_distribution > umbral].index
-
 X_train["Category Name"] = X_train["Category Name"].where(X_train["Category Name"].isin(valid_categories), "OTHERS")
-X_test["Category Name"] = X_test["Category Name"].where(X_test["Category Name"].isin(valid_categories), "OTHERS")
 
 scaler = StandardScaler()
 X_train_num = scaler.fit_transform(X_train[numeric_vars])
@@ -60,6 +55,7 @@ encoder = TargetEncoder(cols=categorical_vars)
 X_train_cat = encoder.fit_transform(X_train[categorical_vars], y_train)
 
 X_train_processed = pd.concat([X_train_cat, X_train_num], axis=1)
+X_train_processed[numeric_var_limited[0]] = X_train[numeric_var_limited[0]]
 
 smote = SMOTE(sampling_strategy=0.25, random_state=42)
 X_train_processed_balanced, y_train_balanced = smote.fit_resample(X_train_processed, y_train)
@@ -171,10 +167,12 @@ def get_risk_prob(n_clicks, var_1, var_2, var_3, var_4, var_5, var_6, table_data
             "Shipping Mode": [str(var_6)]
         })
 
+        new_numeric_var_limited = new_object[numeric_var_limited[0]].values.reshape(-1, 1)
+
         obj_num_scaled = scaler.transform(new_object[numeric_vars])
         obj_cat_encoded = encoder.transform(new_object[categorical_vars])
-        object_processed = np.hstack((obj_cat_encoded, obj_num_scaled))
-        obj_pca = pca.transform(object_processed)
+        object_processed = np.hstack((obj_cat_encoded, obj_num_scaled, new_numeric_var_limited))
+        obj_pca = pca.transform(new_object[numeric_vars])
 
         prob_fail = bagging_knn.predict_proba(object_processed)[0,0] * 100 
         prob_fail_text = f"{prob_fail:.2f}%"
