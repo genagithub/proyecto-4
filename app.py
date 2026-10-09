@@ -72,12 +72,9 @@ bagging_knn = BaggingClassifier(
 
 bagging_knn.fit(X_train_processed_balanced, y_train_balanced)
 
-X_train_pca = X_train_processed.copy()
 X_train_pca = X_train_processed[numeric_vars + numeric_var_limited]
-
 pca = PCA(n_components=2, random_state=42)
 pca_results = pca.fit_transform(X_train_pca)
-
 df_pca = pd.DataFrame(pca_results, columns=["PC1", "PC2"])
 df_pca["Order Success"] = y_train.values
 
@@ -173,8 +170,8 @@ def get_risk_prob(n_clicks, var_1, var_2, var_3, var_4, var_5, var_6, table_data
         obj_cat_encoded = encoder.transform(new_object[categorical_vars])
         object_processed = np.hstack((obj_cat_encoded, obj_num_scaled, new_numeric_var_limited))
 
-        obj_num_scaled = np.hstack((obj_num_scaled, new_numeric_var_limited))
-        obj_pca = pca.transform(obj_num_scaled)
+        obj_num = np.hstack((obj_num_scaled, new_numeric_var_limited))
+        obj_pca = pca.transform(obj_num)
 
         prob_fail = bagging_knn.predict_proba(object_processed)[0,0] * 100 
         prob_fail_text = f"{prob_fail:.2f}%"
