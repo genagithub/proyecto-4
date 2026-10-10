@@ -1,7 +1,7 @@
 ### ⚠️ Evaluación de Riesgo de Fracaso en Planificaciones Comerciales
 
 #### 🎯 Contexto del Problema de Negocio 
-Los sectores de ventas/operaciones y logística ejecutan sus múltiples transacciones sin saber con certeza la probabilidad real de concreción y los riesgos asociados a cada nuevo contrato, al operar bajo un baseline reactivo y conservador debido a que las pérdidas transaccionales y los fallos logísticos representan una pequeña proporción del total de las ventas, la gestión interna los asume como eventos poco probables, fortuitos o inherentemente difíciles de anticipar. A través de una solicitud, el equipo técnico de DBA manipuló y recolectó estratégicamente la información requerida para el caso, por lo que el objetivo es transformar la previsión comercial tradicional en una herramienta prescriptiva capaz de anticipar riesgos operativos y asegurar la viabilidad de la ejecución antes de la conclusión transaccional.
+Los sectores de ventas & operaciones ejecutan sus múltiples transacciones sin saber con certeza la probabilidad real de concreción y los riesgos asociados a cada nuevo contrato, al operar bajo un baseline reactivo y conservador debido a que las pérdidas transaccionales y los fallos logísticos representan una pequeña proporción del total de las ventas, la gestión interna los asume como eventos poco probables, fortuitos o inherentemente difíciles de anticipar. A través de una solicitud, el equipo técnico de DBA manipuló y recolectó estratégicamente la información requerida para el caso, por lo que el objetivo es transformar la previsión comercial tradicional en una herramienta prescriptiva capaz de anticipar riesgos operativos y asegurar la viabilidad de la ejecución antes de la conclusión transaccional.
 
 ---
 
@@ -24,4 +24,4 @@ El resultado final es una herramienta interactiva basada en un asistente intelig
 
 #### 📌 Propósito: Impacto Directo
 
-- **Mitigación Preventiva:** Dota al equipo de ventas y operaciones la ventaja competitiva de anticipar la viabilidad real de los nuevos contratos antes de su ejecución y transformar la incertidumbre de las ventas en previsibilidad operativa.
+- **Mitigación Preventiva:** Dota al equipo de ventas & operaciones la ventaja competitiva de anticipar la viabilidad real de los nuevos contratos antes de su ejecución y transformar la incertidumbre de las ventas en previsibilidad operativa, dejando a su vez el terreno limpio al sector encargado de la logística.
