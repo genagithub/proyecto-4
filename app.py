@@ -4,10 +4,8 @@ import plotly.graph_objects as go
 import dash
 from dash import html, dcc, dash_table
 from dash.dependencies import Output, Input, State
-from sklearn.model_selection import train_test_split
 from category_encoders import TargetEncoder
 from sklearn.preprocessing import StandardScaler
-from imblearn.over_sampling import SMOTE
 from sklearn.decomposition import PCA
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.ensemble import BaggingClassifier
@@ -18,11 +16,11 @@ df_original = pd.read_csv("data/commercial_planning.csv", encoding="latin-1")
 final_states = ["CLOSED", "COMPLETE", "CANCELED", "SUSPECTED_FRAUD"]
 df_original = df_original[df_original["Order Status"].isin(final_states)]
 df_original["Order Success"] = df_original["Order Status"].isin(["COMPLETE", "CLOSED"]).astype(int)
-df_original["Discount Ratio"] = df_original["Order Item Discount"] / df_original["Product Price"]
+df_original["Discount Ratio"] = df_original["Order Discount"] / df_original["Product Price"]
 
 df = df_original.copy()
 
-df.drop(columns=["Order Status","Order Item Discount"], inplace=True)
+df.drop(columns=["Order Status","Order Discount"], inplace=True)
 df = df[df["Discount Ratio"] <= 1]
 df = df.reset_index(drop=True)
 
@@ -57,9 +55,6 @@ X_train_cat = encoder.fit_transform(X_train[categorical_vars], y_train)
 X_train_processed = pd.concat([X_train_cat, X_train_num], axis=1)
 X_train_processed[numeric_var_limited[0]] = X_train[numeric_var_limited[0]]
 
-smote = SMOTE(sampling_strategy=0.2, random_state=42)
-X_train_processed_balanced, y_train_balanced = smote.fit_resample(X_train_processed, y_train)
-
 knn_classifier = KNeighborsClassifier(n_neighbors=5)
 
 bagging_knn = BaggingClassifier(
@@ -70,7 +65,7 @@ bagging_knn = BaggingClassifier(
     n_jobs=1             
 )
 
-bagging_knn.fit(X_train_processed_balanced, y_train_balanced)
+bagging_knn.fit(X_train_processed, y_train)
 
 X_train_pca = X_train_processed[numeric_vars + numeric_var_limited]
 pca = PCA(n_components=2, random_state=42)
