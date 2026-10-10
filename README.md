@@ -1,7 +1,7 @@
 ### ⚠️ Evaluación de Riesgo de Fracaso en Planificaciones Comerciales
 
 #### 🎯 Contexto del Problema de Negocio 
-La empresa proyecta sus ventas futuras en múltiples canales comerciales sin saber con certeza la probabilidad real de concreción y los riesgos asociados a cada nuevo contrato, al operar bajo un baseline reactivo y conservador debido a que las pérdidas transaccionales y los fallos logísticos representan una pequeña proporción del total de las ventas, la gestión interna los asume como eventos poco probables, fortuitos o inherentemente difíciles de anticipar. El equipo técnico seleccionó estrategicamente las variables requeridas del conjunto, por lo que el objetivo es transformar la previsión comercial tradicional en una herramienta prescriptiva capaz de anticipar riesgos operativos y asegurar la viabilidad de la ejecución antes de la conclusión transaccional.
+Los sectores de ventas/operaciones y logística ejecutan sus múltiples transacciones sin saber con certeza la probabilidad real de concreción y los riesgos asociados a cada nuevo contrato, al operar bajo un baseline reactivo y conservador debido a que las pérdidas transaccionales y los fallos logísticos representan una pequeña proporción del total de las ventas, la gestión interna los asume como eventos poco probables, fortuitos o inherentemente difíciles de anticipar. A través de una solicitud, el equipo técnico de DBA manipuló y recolectó estratégicamente la información requerida para el caso, por lo que el objetivo es transformar la previsión comercial tradicional en una herramienta prescriptiva capaz de anticipar riesgos operativos y asegurar la viabilidad de la ejecución antes de la conclusión transaccional.
 
 ---
 
