@@ -10,7 +10,6 @@ from sklearn.preprocessing import StandardScaler, FunctionTransformer
 from category_encoders import TargetEncoder
 from sklearn.pipeline import Pipeline
 from sklearn.decomposition import PCA
-from sklearn.calibration import CalibratedClassifierCV
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.ensemble import BaggingClassifier
 
@@ -69,12 +68,8 @@ preprocess_pipeline = Pipeline([
 ])
 
 X_train_processed = preprocess_pipeline.fit_transform(X_train, y_train)
-X_test_processed = preprocess_pipeline.transform(X_test) 
-
 feature_names = numeric_vars + categorical_vars + numeric_var_limited
-
 X_train_processed = pd.DataFrame(X_train_processed, columns=feature_names, index=X_train.index)
-X_test_processed = pd.DataFrame(X_test_processed, columns=feature_names, index=X_test.index)
 
 knn_classifier = KNeighborsClassifier(n_neighbors=5)
 
@@ -87,8 +82,6 @@ bagging_knn = BaggingClassifier(
 )
 
 bagging_knn.fit(X_train_processed, y_train)
-calibrated_model = CalibratedClassifierCV(estimator=bagging_knn, method="sigmoid")
-calibrated_model.fit(X_test_processed, y_test)
 
 X_train_pca = X_train[numeric_vars + numeric_var_limited]
 pca = PCA(n_components=2, random_state=42)
