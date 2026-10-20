@@ -5,8 +5,12 @@ import dash
 from dash import html, dcc, dash_table
 from dash.dependencies import Output, Input, State
 from category_encoders import TargetEncoder
-from sklearn.preprocessing import StandardScaler
+from sklearn.compose import ColumnTransformer
+from sklearn.preprocessing import StandardScaler, FunctionTransformer
+from category_encoders import TargetEncoder
+from sklearn.pipeline import Pipeline
 from sklearn.decomposition import PCA
+from sklearn.calibration import CalibratedClassifierCV
 from sklearn.neighbors import KNeighborsClassifier
 from sklearn.ensemble import BaggingClassifier
 
@@ -43,17 +47,34 @@ X_train, y_train = df[categorical_vars + numeric_vars + numeric_var_limited], df
 umbral = 0.025
 categories_distribution = X_train["Category Name"].value_counts(normalize=True)
 valid_categories = categories_distribution[categories_distribution > umbral].index
-X_train["Category Name"] = X_train["Category Name"].where(X_train["Category Name"].isin(valid_categories), "OTHERS")
 
-scaler = StandardScaler()
-X_train_num = scaler.fit_transform(X_train[numeric_vars])
-X_train_num = pd.DataFrame(X_train_num, columns=numeric_vars, index=X_train.index)
+def group_rare_categories(X, valid_cats=valid_categories):
+    X = X.copy()
+    X["Category Name"] = X["Category Name"].where(X["Category Name"].isin(valid_cats), "OTHERS")
+    return X
 
-encoder = TargetEncoder(cols=categorical_vars)
-X_train_cat = encoder.fit_transform(X_train[categorical_vars], y_train)
+rare_grouper = FunctionTransformer(group_rare_categories)
 
-X_train_processed = pd.concat([X_train_cat, X_train_num], axis=1)
-X_train_processed[numeric_var_limited[0]] = X_train[numeric_var_limited[0]]
+preprocessor = ColumnTransformer(
+    transformers=[
+        ("num", StandardScaler(), numeric_vars),
+        ("cat", TargetEncoder(), categorical_vars)
+    ],
+    remainder="passthrough" 
+)
+
+preprocess_pipeline = Pipeline([
+    ("rare_groups", rare_grouper),
+    ("encoding_and_scaling", preprocessor)
+])
+
+X_train_processed = preprocess_pipeline.fit_transform(X_train, y_train)
+X_test_processed = preprocess_pipeline.transform(X_test) 
+
+feature_names = numeric_vars + categorical_vars + numeric_var_limited
+
+X_train_processed = pd.DataFrame(X_train_processed, columns=feature_names, index=X_train.index)
+X_test_processed = pd.DataFrame(X_test_processed, columns=feature_names, index=X_test.index)
 
 knn_classifier = KNeighborsClassifier(n_neighbors=5)
 
@@ -66,8 +87,10 @@ bagging_knn = BaggingClassifier(
 )
 
 bagging_knn.fit(X_train_processed, y_train)
+calibrated_model = CalibratedClassifierCV(estimator=bagging_knn, method="sigmoid")
+calibrated_model.fit(X_test_processed, y_test)
 
-X_train_pca = X_train_processed[numeric_vars + numeric_var_limited]
+X_train_pca = X_train[numeric_vars + numeric_var_limited]
 pca = PCA(n_components=2, random_state=42)
 pca_results = pca.fit_transform(X_train_pca)
 df_pca = pd.DataFrame(pca_results, columns=["PC1", "PC2"])
@@ -159,15 +182,10 @@ def get_risk_prob(n_clicks, var_1, var_2, var_3, var_4, var_5, var_6, table_data
             "Shipping Mode": [str(var_6)]
         })
 
-        new_numeric_var_limited = new_object[numeric_var_limited[0]].values.reshape(-1, 1)
-
-        obj_num_scaled = scaler.transform(new_object[numeric_vars])
-        obj_cat_encoded = encoder.transform(new_object[categorical_vars])
-        object_processed = np.hstack((obj_cat_encoded, obj_num_scaled, new_numeric_var_limited))
-
-        obj_num = np.hstack((obj_num_scaled, new_numeric_var_limited))
-        obj_pca = pca.transform(obj_num)
-
+        object_processed = preprocess_pipeline.transform(new_object)
+        object_processed = pd.DataFrame(object_processed, columns=feature_names)
+        obj_pca = pca.transform(object_processed[numeric_vars + numeric_var_limited])
+        
         prob_fail = bagging_knn.predict_proba(object_processed)[0,0] * 100 
         prob_fail_text = f"{prob_fail:.2f}%"
 
