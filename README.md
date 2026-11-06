@@ -26,4 +26,4 @@ El resultado final es una herramienta interactiva basada en un asistente intelig
 
 #### 📌 Propósito: Impacto Directo
 
-- **Mitigación Preventiva:** Dota al equipo de ventas & operaciones la ventaja competitiva de anticipar la viabilidad real de los nuevos contratos antes de su ejecución y transformar la incertidumbre de las ventas en previsibilidad operativa, dejando a su vez el terreno limpio al sector encargado de la logística.
+- **Mitigación Preventiva:** Al integrarse como un asistente inteligente de scoring y simulación permite al equipo de ventas y operaciones introducir variables logísticas para proyectar escenarios y visualizar gráficamente el porcentaje de riesgo de fracaso de una nueva planificación frente al histórico de la empresa. Su implementación transforma la gestión reactiva tradicional en una estrategia preventiva, permitiendo a la gerencia validar la viabilidad real de cada contrato antes de su ejecución, blindando el margen transaccional y facilitando una operación logística con cero incertidumbre.
