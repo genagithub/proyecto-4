@@ -1,7 +1,7 @@
 ### ⚠️ Evaluación de Riesgo de Fracaso en Planificaciones Comerciales
 
 #### 🎯 Contexto del Problema de Negocio 
-Los sectores de ventas & operaciones ejecutan sus múltiples transacciones sin saber con certeza la probabilidad real de concreción y los riesgos asociados a cada nuevo contrato, al operar bajo un baseline reactivo y conservador debido a que las pérdidas transaccionales y los fallos logísticos representan una pequeña proporción del total de las ventas, la gestión interna los asume como eventos poco probables, fortuitos o inherentemente difíciles de anticipar. 
+Los sectores de Ventas y Operaciones ejecutan sus múltiples transacciones sin saber con certeza la probabilidad real de concreción y los riesgos asociados a cada nuevo contrato, al operar bajo un baseline reactivo y conservador debido a que las pérdidas transaccionales y los fallos logísticos representan una pequeña proporción del total de las ventas, la gestión interna los asume como eventos poco probables, fortuitos o inherentemente difíciles de anticipar. 
 
 Como etapa previa, desde el data warehouse se seleccionaron los atributos clave y se agruparon estratégicamente los datos requeridos para el proyecto. Por lo que el objetivo es transformar la previsión comercial tradicional en una herramienta prescriptiva capaz de anticipar riesgos operativos y asegurar la viabilidad de la ejecución antes de la conclusión transaccional.
 
@@ -26,4 +26,4 @@ El resultado final es una herramienta interactiva basada en un asistente intelig
 
 #### 📌 Propósito: Impacto Directo
 
-- **Mitigación Preventiva:** Al integrarse como un asistente inteligente de scoring y simulación permite al equipo de ventas y operaciones introducir variables logísticas para proyectar escenarios y visualizar gráficamente el porcentaje de riesgo de fracaso de una nueva planificación frente al histórico de la empresa. Su implementación transforma la gestión reactiva tradicional en una estrategia preventiva, permitiendo a la gerencia validar la viabilidad real de cada contrato antes de su ejecución, blindando el margen transaccional y facilitando una operación logística con cero incertidumbre.
+- **Mitigación Preventiva:** Al integrarse como un asistente inteligente de scoring y simulación permite al equipo de Ventas y Operaciones introducir variables logísticas para proyectar escenarios y visualizar gráficamente el porcentaje de riesgo de fracaso de una nueva planificación frente al histórico de la empresa. Su implementación transforma la gestión reactiva tradicional en una estrategia preventiva, permitiendo a la gerencia validar la viabilidad real de cada contrato antes de su ejecución, blindando el margen transaccional y facilitando una operación logística con cero incertidumbre.
